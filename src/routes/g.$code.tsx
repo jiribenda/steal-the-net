@@ -330,7 +330,7 @@ function GameRoom() {
             game={game}
             round={round}
             players={players}
-            actions={actions}
+            actions={currentActions}
             myPlayer={myPlayer}
             myAction={myAction}
             secondsLeft={secondsLeft}
