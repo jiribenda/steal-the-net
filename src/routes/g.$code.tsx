@@ -622,8 +622,15 @@ function ActionPanel({
   isFinale: boolean;
   onSubmit: (o: { isThief: boolean; amount: number }) => void;
 }) {
+  const [submitting, setSubmitting] = useState(false);
+  const handle = (o: { isThief: boolean; amount: number }) => {
+    if (submitting) return;
+    setSubmitting(true);
+    onSubmit(o);
+  };
+  const lock = submitting;
   return (
-    <div className="bg-gradient-card rounded-2xl border border-border p-6 shadow-card">
+    <div className={`bg-gradient-card rounded-2xl border border-border p-6 shadow-card ${lock ? "opacity-70" : ""}`}>
       <h3 className="text-lg font-bold">{isFinale ? "Finále — poslední rozhodnutí" : "Tvoje volba"}</h3>
       <p className="mt-1 text-sm text-muted-foreground">
         {isFinale
@@ -636,12 +643,12 @@ function ActionPanel({
           <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Vklady</div>
           <div className="flex flex-wrap gap-2">
             {BET_OPTIONS.map((opt) => {
-              const disabled = opt > chips;
+              const disabled = opt > chips || lock;
               return (
                 <button
                   key={opt}
                   disabled={disabled}
-                  onClick={() => onSubmit({ isThief: false, amount: opt })}
+                  onClick={() => handle({ isThief: false, amount: opt })}
                   className="group relative flex h-16 w-16 flex-col items-center justify-center rounded-full border-2 border-primary/60 bg-background/60 font-bold text-neon-cyan transition hover:border-primary hover:shadow-neon disabled:cursor-not-allowed disabled:opacity-30"
                 >
                   <img src={chipImg} alt="" width={48} height={48} className="absolute inset-0 m-auto h-12 w-12 opacity-40 group-hover:opacity-70" />
@@ -650,9 +657,9 @@ function ActionPanel({
               );
             })}
             <button
-              disabled={chips <= 0}
-              onClick={() => onSubmit({ isThief: false, amount: chips })}
-              className="bg-gradient-gold relative flex h-16 min-w-[5rem] items-center justify-center rounded-2xl px-3 font-black uppercase tracking-wider text-background shadow-neon"
+              disabled={chips <= 0 || lock}
+              onClick={() => handle({ isThief: false, amount: chips })}
+              className="bg-gradient-gold relative flex h-16 min-w-[5rem] items-center justify-center rounded-2xl px-3 font-black uppercase tracking-wider text-background shadow-neon disabled:cursor-not-allowed disabled:opacity-30"
             >
               All-in<br /><span className="text-xs">({chips})</span>
             </button>
@@ -663,8 +670,9 @@ function ActionPanel({
       {isFinale && (
         <div className="mt-5">
           <button
-            onClick={() => onSubmit({ isThief: false, amount: 0 })}
-            className="bg-gradient-primary shadow-neon w-full rounded-xl px-6 py-4 text-lg font-bold uppercase tracking-wider text-primary-foreground"
+            disabled={lock}
+            onClick={() => handle({ isThief: false, amount: 0 })}
+            className="bg-gradient-primary shadow-neon w-full rounded-xl px-6 py-4 text-lg font-bold uppercase tracking-wider text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
           >
             🤝 Být čestný
           </button>
@@ -676,12 +684,15 @@ function ActionPanel({
       </div>
 
       <button
-        onClick={() => onSubmit({ isThief: true, amount: 0 })}
-        className="bg-gradient-thief shadow-thief group flex w-full items-center justify-center gap-3 rounded-xl px-6 py-4 text-lg font-bold uppercase tracking-wider text-thief-foreground"
+        disabled={lock}
+        onClick={() => handle({ isThief: true, amount: 0 })}
+        className="bg-gradient-thief shadow-thief group flex w-full items-center justify-center gap-3 rounded-xl px-6 py-4 text-lg font-bold uppercase tracking-wider text-thief-foreground disabled:cursor-not-allowed disabled:opacity-50"
       >
         <img src={thiefImg} alt="" width={64} height={64} className="h-10 w-10" />
         Krást
       </button>
+
+      {lock && <p className="mt-3 text-center text-xs text-muted-foreground">Odesílám volbu…</p>}
     </div>
   );
 }
