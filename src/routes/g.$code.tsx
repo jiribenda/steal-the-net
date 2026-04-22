@@ -149,8 +149,13 @@ function GameRoom() {
     [players],
   );
 
-  const myAction = actions.find((a) => a.player_id === myPlayerId) ?? null;
-  const submittedCount = actions.length;
+  // Filter actions to only those for the current round, so stale state doesn't trigger settle
+  const currentActions = useMemo(
+    () => (round ? actions.filter((a: any) => !a.round_id || a.round_id === round.id) : []),
+    [actions, round],
+  );
+  const myAction = currentActions.find((a) => a.player_id === myPlayerId) ?? null;
+  const submittedCount = currentActions.length;
   const expectedCount = activePlayers.length;
   const allIn = submittedCount >= expectedCount && expectedCount > 0;
   const deadlineMs = round ? new Date(round.deadline).getTime() : 0;
