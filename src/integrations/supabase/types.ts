@@ -14,7 +14,181 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      actions: {
+        Row: {
+          amount: number
+          auto: boolean
+          created_at: string
+          id: string
+          is_thief: boolean
+          player_id: string
+          revealed: boolean
+          round_id: string
+        }
+        Insert: {
+          amount?: number
+          auto?: boolean
+          created_at?: string
+          id?: string
+          is_thief?: boolean
+          player_id: string
+          revealed?: boolean
+          round_id: string
+        }
+        Update: {
+          amount?: number
+          auto?: boolean
+          created_at?: string
+          id?: string
+          is_thief?: boolean
+          player_id?: string
+          revealed?: boolean
+          round_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "actions_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "actions_round_id_fkey"
+            columns: ["round_id"]
+            isOneToOne: false
+            referencedRelation: "rounds"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      games: {
+        Row: {
+          banker_pot: number
+          code: string
+          created_at: string
+          current_round: number
+          host_client_id: string
+          id: string
+          last_summary: Json | null
+          min_bet: number
+          round_seconds: number
+          starting_chips: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          banker_pot?: number
+          code: string
+          created_at?: string
+          current_round?: number
+          host_client_id: string
+          id?: string
+          last_summary?: Json | null
+          min_bet?: number
+          round_seconds?: number
+          starting_chips?: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          banker_pot?: number
+          code?: string
+          created_at?: string
+          current_round?: number
+          host_client_id?: string
+          id?: string
+          last_summary?: Json | null
+          min_bet?: number
+          round_seconds?: number
+          starting_chips?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      players: {
+        Row: {
+          chips: number
+          client_id: string
+          fled_with: number
+          game_id: string
+          id: string
+          joined_at: string
+          name: string
+          seat: number
+          status: string
+        }
+        Insert: {
+          chips?: number
+          client_id: string
+          fled_with?: number
+          game_id: string
+          id?: string
+          joined_at?: string
+          name: string
+          seat: number
+          status?: string
+        }
+        Update: {
+          chips?: number
+          client_id?: string
+          fled_with?: number
+          game_id?: string
+          id?: string
+          joined_at?: string
+          name?: string
+          seat?: number
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "players_game_id_fkey"
+            columns: ["game_id"]
+            isOneToOne: false
+            referencedRelation: "games"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rounds: {
+        Row: {
+          created_at: string
+          deadline: string
+          game_id: string
+          id: string
+          is_finale: boolean
+          round_number: number
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          deadline: string
+          game_id: string
+          id?: string
+          is_finale?: boolean
+          round_number: number
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          deadline?: string
+          game_id?: string
+          id?: string
+          is_finale?: boolean
+          round_number?: number
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rounds_game_id_fkey"
+            columns: ["game_id"]
+            isOneToOne: false
+            referencedRelation: "games"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
