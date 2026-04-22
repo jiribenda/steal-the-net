@@ -105,6 +105,8 @@ function GameRoom() {
         .on("postgres_changes", { event: "*", schema: "public", table: "rounds", filter: `game_id=eq.${g.id}` },
           async (payload) => {
             const r = payload.new as Round;
+            // Clear actions immediately so stale actions from prior round don't trigger auto-settle
+            setActions([]);
             setRound(r);
             const { data } = await supabase.from("actions").select("*").eq("round_id", r.id);
             setActions((data ?? []) as ActionLite[]);
