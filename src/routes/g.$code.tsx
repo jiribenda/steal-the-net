@@ -268,7 +268,7 @@ function GameRoom() {
 
     // Apply player updates
     for (const [pid, upd] of Object.entries(result.playerUpdates)) {
-      const patch: Record<string, unknown> = {};
+      const patch: { chips?: number; status?: string; fled_with?: number } = {};
       if (upd.chips !== undefined) patch.chips = upd.chips;
       if (upd.status !== undefined) patch.status = upd.status;
       if (upd.fled_with !== undefined) patch.fled_with = upd.fled_with;
