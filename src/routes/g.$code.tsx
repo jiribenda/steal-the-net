@@ -105,6 +105,8 @@ function GameRoom() {
         .on("postgres_changes", { event: "*", schema: "public", table: "rounds", filter: `game_id=eq.${g.id}` },
           async (payload) => {
             const r = payload.new as Round;
+            // Clear actions immediately so stale actions from prior round don't trigger auto-settle
+            setActions([]);
             setRound(r);
             const { data } = await supabase.from("actions").select("*").eq("round_id", r.id);
             setActions((data ?? []) as ActionLite[]);
@@ -147,8 +149,13 @@ function GameRoom() {
     [players],
   );
 
-  const myAction = actions.find((a) => a.player_id === myPlayerId) ?? null;
-  const submittedCount = actions.length;
+  // Filter actions to only those for the current round, so stale state doesn't trigger settle
+  const currentActions = useMemo(
+    () => (round ? actions.filter((a: any) => !a.round_id || a.round_id === round.id) : []),
+    [actions, round],
+  );
+  const myAction = currentActions.find((a) => a.player_id === myPlayerId) ?? null;
+  const submittedCount = currentActions.length;
   const expectedCount = activePlayers.length;
   const allIn = submittedCount >= expectedCount && expectedCount > 0;
   const deadlineMs = round ? new Date(round.deadline).getTime() : 0;
@@ -323,7 +330,7 @@ function GameRoom() {
             game={game}
             round={round}
             players={players}
-            actions={actions}
+            actions={currentActions}
             myPlayer={myPlayer}
             myAction={myAction}
             secondsLeft={secondsLeft}
