@@ -210,10 +210,6 @@ function GameRoom() {
     let amount = opts.amount;
     if (!opts.isThief && !round.is_finale) {
       amount = Math.min(amount, myPlayer.chips);
-      // Deduct chips up-front for normal rounds
-      const { error: pErr } = await supabase
-        .from("players").update({ chips: myPlayer.chips - amount }).eq("id", myPlayer.id);
-      if (pErr) return;
     }
 
     await supabase.from("actions").insert({
@@ -245,10 +241,24 @@ function GameRoom() {
         });
       } else {
         const minBet = Math.min(game.min_bet, p.chips);
-        await supabase.from("players").update({ chips: p.chips - minBet }).eq("id", p.id);
         await supabase.from("actions").insert({
           round_id: round.id, player_id: p.id, is_thief: false, amount: minBet, auto: true,
         });
+      }
+    }
+    // Now deduct chips for all bettors (non-thief, non-finale) at reveal time
+    if (!round.is_finale) {
+      const { data: allActions } = await supabase.from("actions").select("*").eq("round_id", round.id);
+      const { data: allPlayers } = await supabase.from("players").select("*").eq("game_id", game.id);
+      const pMap = new Map((allPlayers ?? []).map((p: any) => [p.id, p]));
+      for (const a of (allActions ?? []) as any[]) {
+        if (a.is_thief) continue;
+        const p: any = pMap.get(a.player_id);
+        if (!p) continue;
+        const deduct = Math.min(a.amount, p.chips);
+        if (deduct > 0) {
+          await supabase.from("players").update({ chips: p.chips - deduct }).eq("id", p.id);
+        }
       }
     }
     // Reveal
