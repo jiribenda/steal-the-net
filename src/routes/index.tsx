@@ -122,7 +122,7 @@ function Home() {
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-card/40 px-3 py-1 text-xs font-medium uppercase tracking-widest text-neon-mint">
             Online · 2–8 hráčů · Realtime
           </div>
-          <h1 className="bg-gradient-primary bg-clip-text px-4 py-2 text-5xl font-black leading-[1.15] tracking-tight text-transparent md:text-7xl">
+          <h1 className="px-4 py-2 text-5xl font-black leading-[1.15] tracking-tight text-white md:text-7xl drop-shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
             (ne)pokradeš?
           </h1>
           <p className="mt-4 max-w-xl text-lg text-muted-foreground">
