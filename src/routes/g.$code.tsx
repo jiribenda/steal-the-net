@@ -30,6 +30,7 @@ interface Game {
   status: "lobby" | "playing" | "finale" | "finished";
   starting_chips: number;
   round_seconds: number;
+  pause_seconds: number;
   min_bet: number;
   current_round: number;
   banker_pot: number;
@@ -302,8 +303,9 @@ function GameRoom() {
 
     await supabase.from("rounds").update({ status: "settled" }).eq("id", round.id);
 
-    // Pause showing the summary
-    await new Promise((r) => setTimeout(r, 9000));
+    // Pause showing the summary (admin-configurable)
+    const pauseMs = Math.max(3, game.pause_seconds ?? 15) * 1000;
+    await new Promise((r) => setTimeout(r, pauseMs));
 
     // Open next round or finish
     const { data: gFresh } = await supabase.from("games").select("*").eq("id", game.id).single();
