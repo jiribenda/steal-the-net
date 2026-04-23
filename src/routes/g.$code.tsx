@@ -112,10 +112,12 @@ function GameRoom() {
             setActions((data ?? []) as ActionLite[]);
           })
         .on("postgres_changes", { event: "*", schema: "public", table: "actions" },
-          async () => {
-            const cur = round;
-            if (!cur) return;
-            const { data } = await supabase.from("actions").select("*").eq("round_id", cur.id);
+          async (payload) => {
+            // Closure-safe: refetch using round_id from the payload
+            const newRow: any = payload.new ?? payload.old;
+            const rid = newRow?.round_id;
+            if (!rid) return;
+            const { data } = await supabase.from("actions").select("*").eq("round_id", rid);
             setActions((data ?? []) as ActionLite[]);
           })
         .subscribe();
