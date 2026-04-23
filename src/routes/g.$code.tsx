@@ -210,10 +210,6 @@ function GameRoom() {
     let amount = opts.amount;
     if (!opts.isThief && !round.is_finale) {
       amount = Math.min(amount, myPlayer.chips);
-      // Deduct chips up-front for normal rounds
-      const { error: pErr } = await supabase
-        .from("players").update({ chips: myPlayer.chips - amount }).eq("id", myPlayer.id);
-      if (pErr) return;
     }
 
     await supabase.from("actions").insert({
