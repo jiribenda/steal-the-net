@@ -303,7 +303,7 @@ function GameRoom() {
     await supabase.from("rounds").update({ status: "settled" }).eq("id", round.id);
 
     // Pause showing the summary
-    await new Promise((r) => setTimeout(r, 4500));
+    await new Promise((r) => setTimeout(r, 9000));
 
     // Open next round or finish
     const { data: gFresh } = await supabase.from("games").select("*").eq("id", game.id).single();
