@@ -112,10 +112,12 @@ function GameRoom() {
             setActions((data ?? []) as ActionLite[]);
           })
         .on("postgres_changes", { event: "*", schema: "public", table: "actions" },
-          async () => {
-            const cur = round;
-            if (!cur) return;
-            const { data } = await supabase.from("actions").select("*").eq("round_id", cur.id);
+          async (payload) => {
+            // Closure-safe: refetch using round_id from the payload
+            const newRow: any = payload.new ?? payload.old;
+            const rid = newRow?.round_id;
+            if (!rid) return;
+            const { data } = await supabase.from("actions").select("*").eq("round_id", rid);
             setActions((data ?? []) as ActionLite[]);
           })
         .subscribe();
@@ -301,7 +303,7 @@ function GameRoom() {
     await supabase.from("rounds").update({ status: "settled" }).eq("id", round.id);
 
     // Pause showing the summary
-    await new Promise((r) => setTimeout(r, 4500));
+    await new Promise((r) => setTimeout(r, 9000));
 
     // Open next round or finish
     const { data: gFresh } = await supabase.from("games").select("*").eq("id", game.id).single();
@@ -462,12 +464,18 @@ function PlayingView({
             <div className="text-xs uppercase tracking-widest text-muted-foreground">Hotovo</div>
             <div className="text-xl font-bold text-neon-mint">{submittedCount}/{expectedCount}</div>
           </div>
-          {round.status === "collecting" && (
+          {round.status === "collecting" && submittedCount < expectedCount && (
             <div className="text-center">
               <div className="text-xs uppercase tracking-widest text-muted-foreground">Čas</div>
               <div className={`text-3xl font-black tabular-nums ${secondsLeft <= 10 ? "text-destructive" : "text-neon-cyan"}`}>
                 {secondsLeft}s
               </div>
+            </div>
+          )}
+          {round.status === "collecting" && submittedCount >= expectedCount && expectedCount > 0 && (
+            <div className="text-center">
+              <div className="text-xs uppercase tracking-widest text-muted-foreground">Stav</div>
+              <div className="text-xl font-black text-neon-mint">Odhalujeme…</div>
             </div>
           )}
         </div>
