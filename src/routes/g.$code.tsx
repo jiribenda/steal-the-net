@@ -464,12 +464,18 @@ function PlayingView({
             <div className="text-xs uppercase tracking-widest text-muted-foreground">Hotovo</div>
             <div className="text-xl font-bold text-neon-mint">{submittedCount}/{expectedCount}</div>
           </div>
-          {round.status === "collecting" && (
+          {round.status === "collecting" && submittedCount < expectedCount && (
             <div className="text-center">
               <div className="text-xs uppercase tracking-widest text-muted-foreground">Čas</div>
               <div className={`text-3xl font-black tabular-nums ${secondsLeft <= 10 ? "text-destructive" : "text-neon-cyan"}`}>
                 {secondsLeft}s
               </div>
+            </div>
+          )}
+          {round.status === "collecting" && submittedCount >= expectedCount && expectedCount > 0 && (
+            <div className="text-center">
+              <div className="text-xs uppercase tracking-widest text-muted-foreground">Stav</div>
+              <div className="text-xl font-black text-neon-mint">Odhalujeme…</div>
             </div>
           )}
         </div>
