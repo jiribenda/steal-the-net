@@ -40,61 +40,61 @@
 :root {
   --radius: 0.875rem;
 
-  /* Royal blue background */
-  --background: oklch(0.20 0.13 255);
-  --foreground: oklch(0.98 0.01 250);
+  /* Deep dark navy background */
+  --background: oklch(0.14 0.06 255);
+  --foreground: oklch(0.98 0.01 230);
 
-  --card: oklch(0.26 0.14 255);
-  --card-foreground: oklch(0.98 0.01 250);
-  --popover: oklch(0.26 0.14 255);
-  --popover-foreground: oklch(0.98 0.01 250);
+  --card: oklch(0.19 0.07 255);
+  --card-foreground: oklch(0.98 0.01 230);
+  --popover: oklch(0.19 0.07 255);
+  --popover-foreground: oklch(0.98 0.01 230);
 
-  /* Bright royal blue */
-  --primary: oklch(0.55 0.20 255);
-  --primary-foreground: oklch(0.99 0.01 100);
+  /* Neon cyan primary */
+  --primary: oklch(0.78 0.17 220);
+  --primary-foreground: oklch(0.14 0.06 255);
 
-  --secondary: oklch(0.32 0.14 255);
-  --secondary-foreground: oklch(0.98 0.01 250);
+  --secondary: oklch(0.24 0.09 255);
+  --secondary-foreground: oklch(0.98 0.01 230);
 
-  --muted: oklch(0.30 0.12 255);
-  --muted-foreground: oklch(0.80 0.06 240);
+  --muted: oklch(0.22 0.07 255);
+  --muted-foreground: oklch(0.78 0.05 220);
 
-  /* Gold accent */
-  --accent: oklch(0.84 0.16 90);
-  --accent-foreground: oklch(0.20 0.13 255);
+  /* Neon orange accent */
+  --accent: oklch(0.74 0.20 45);
+  --accent-foreground: oklch(0.14 0.06 255);
 
   --destructive: oklch(0.65 0.25 25);
-  --destructive-foreground: oklch(0.98 0.01 250);
+  --destructive-foreground: oklch(0.98 0.01 230);
 
-  --success: oklch(0.78 0.18 155);
-  --success-foreground: oklch(0.20 0.13 255);
+  --success: oklch(0.82 0.18 200);
+  --success-foreground: oklch(0.14 0.06 255);
 
-  --thief: oklch(0.62 0.24 25);
-  --thief-foreground: oklch(0.98 0.01 250);
+  --thief: oklch(0.68 0.24 35);
+  --thief-foreground: oklch(0.98 0.01 230);
 
-  --border: oklch(0.40 0.14 255);
-  --input: oklch(0.30 0.13 255);
-  --ring: oklch(0.84 0.16 90);
+  --border: oklch(0.34 0.12 230);
+  --input: oklch(0.22 0.08 255);
+  --ring: oklch(0.78 0.17 220);
 
-  /* Brand — gold + ice-blue */
-  --neon-cyan: oklch(0.90 0.10 230);
-  --neon-mint: oklch(0.86 0.16 90);
-  --neon-violet: oklch(0.55 0.20 255);
-  --neon-pink: oklch(0.84 0.16 70);
+  /* Brand neon */
+  --neon-cyan: oklch(0.85 0.16 220);
+  --neon-mint: oklch(0.82 0.18 200);
+  --neon-violet: oklch(0.55 0.22 280);
+  --neon-pink: oklch(0.74 0.22 30);
 
-  /* Gradients */
-  --gradient-bg: radial-gradient(ellipse at top, oklch(0.40 0.18 255) 0%, oklch(0.18 0.13 255) 55%, oklch(0.12 0.10 255) 100%);
-  --gradient-primary: linear-gradient(135deg, oklch(0.86 0.16 88), oklch(0.74 0.18 65));
-  --gradient-thief: linear-gradient(135deg, oklch(0.55 0.25 15), oklch(0.45 0.22 350));
-  --gradient-gold: linear-gradient(135deg, oklch(0.90 0.16 95), oklch(0.74 0.18 60));
-  --gradient-card: linear-gradient(160deg, oklch(0.30 0.14 255) 0%, oklch(0.22 0.13 255) 100%);
+  /* Gradients — dark navy bg, neon orange headline, cyan glow */
+  --gradient-bg: radial-gradient(ellipse at top, oklch(0.22 0.12 250) 0%, oklch(0.10 0.06 255) 60%, oklch(0.06 0.04 260) 100%);
+  --gradient-primary: linear-gradient(135deg, oklch(0.80 0.22 55), oklch(0.65 0.26 25));
+  --gradient-thief: linear-gradient(135deg, oklch(0.65 0.26 25), oklch(0.50 0.24 350));
+  --gradient-gold: linear-gradient(135deg, oklch(0.82 0.20 60), oklch(0.68 0.22 30));
+  --gradient-card: linear-gradient(160deg, oklch(0.22 0.09 250) 0%, oklch(0.14 0.07 258) 100%);
 
-  /* Shadows */
-  --shadow-neon: 0 0 30px color-mix(in oklab, var(--accent) 45%, transparent);
-  --shadow-neon-strong: 0 0 50px color-mix(in oklab, var(--accent) 70%, transparent);
-  --shadow-mint: 0 0 30px color-mix(in oklab, var(--accent) 40%, transparent);
-  --shadow-thief: 0 0 30px color-mix(in oklab, var(--thief) 50%, transparent);
-  --shadow-card: 0 10px 40px -10px oklch(0.05 0.05 255 / 0.7);
+  /* Shadows — neon glow */
+  --shadow-neon: 0 0 30px color-mix(in oklab, var(--accent) 55%, transparent);
+  --shadow-neon-strong: 0 0 55px color-mix(in oklab, var(--accent) 80%, transparent);
+  --shadow-mint: 0 0 30px color-mix(in oklab, var(--neon-cyan) 55%, transparent);
+  --shadow-thief: 0 0 30px color-mix(in oklab, var(--thief) 55%, transparent);
+  --shadow-card: 0 10px 40px -10px oklch(0.03 0.04 260 / 0.8);
 
   --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
