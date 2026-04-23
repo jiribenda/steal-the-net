@@ -40,61 +40,61 @@
 :root {
   --radius: 0.875rem;
 
-  /* Deep dark navy background */
-  --background: oklch(0.14 0.06 255);
-  --foreground: oklch(0.98 0.01 230);
+  /* Royal blue background (matches reference image) */
+  --background: oklch(0.32 0.18 258);
+  --foreground: oklch(0.99 0.01 240);
 
-  --card: oklch(0.19 0.07 255);
-  --card-foreground: oklch(0.98 0.01 230);
-  --popover: oklch(0.19 0.07 255);
-  --popover-foreground: oklch(0.98 0.01 230);
+  --card: oklch(0.28 0.17 258);
+  --card-foreground: oklch(0.99 0.01 240);
+  --popover: oklch(0.28 0.17 258);
+  --popover-foreground: oklch(0.99 0.01 240);
 
-  /* Neon cyan primary */
-  --primary: oklch(0.78 0.17 220);
-  --primary-foreground: oklch(0.14 0.06 255);
+  /* Orange primary rgb(255, 142, 19) */
+  --primary: oklch(0.74 0.19 56);
+  --primary-foreground: oklch(0.16 0.05 258);
 
-  --secondary: oklch(0.24 0.09 255);
-  --secondary-foreground: oklch(0.98 0.01 230);
+  --secondary: oklch(0.36 0.18 258);
+  --secondary-foreground: oklch(0.99 0.01 240);
 
-  --muted: oklch(0.22 0.07 255);
-  --muted-foreground: oklch(0.78 0.05 220);
+  --muted: oklch(0.34 0.16 258);
+  --muted-foreground: oklch(0.88 0.04 240);
 
-  /* Neon orange accent */
-  --accent: oklch(0.74 0.20 45);
-  --accent-foreground: oklch(0.14 0.06 255);
+  /* Accent — same orange */
+  --accent: oklch(0.74 0.19 56);
+  --accent-foreground: oklch(0.16 0.05 258);
 
-  --destructive: oklch(0.65 0.25 25);
-  --destructive-foreground: oklch(0.98 0.01 230);
+  --destructive: oklch(0.62 0.24 25);
+  --destructive-foreground: oklch(0.99 0.01 240);
 
-  --success: oklch(0.82 0.18 200);
-  --success-foreground: oklch(0.14 0.06 255);
+  --success: oklch(0.78 0.16 160);
+  --success-foreground: oklch(0.16 0.05 258);
 
   --thief: oklch(0.68 0.24 35);
-  --thief-foreground: oklch(0.98 0.01 230);
+  --thief-foreground: oklch(0.99 0.01 240);
 
-  --border: oklch(0.34 0.12 230);
-  --input: oklch(0.22 0.08 255);
-  --ring: oklch(0.78 0.17 220);
+  --border: oklch(0.48 0.18 258);
+  --input: oklch(0.34 0.16 258);
+  --ring: oklch(0.74 0.19 56);
 
-  /* Brand neon */
-  --neon-cyan: oklch(0.85 0.16 220);
-  --neon-mint: oklch(0.82 0.18 200);
+  /* Brand */
+  --neon-cyan: oklch(0.85 0.14 230);
+  --neon-mint: oklch(0.92 0.05 230);
   --neon-violet: oklch(0.55 0.22 280);
   --neon-pink: oklch(0.74 0.22 30);
 
-  /* Gradients — dark navy bg, neon orange headline, cyan glow */
-  --gradient-bg: radial-gradient(ellipse at top, oklch(0.22 0.12 250) 0%, oklch(0.10 0.06 255) 60%, oklch(0.06 0.04 260) 100%);
-  --gradient-primary: linear-gradient(135deg, oklch(0.80 0.22 55), oklch(0.65 0.26 25));
+  /* Royal-blue radial like reference image */
+  --gradient-bg: radial-gradient(ellipse at center, oklch(0.42 0.20 255) 0%, oklch(0.26 0.18 258) 55%, oklch(0.16 0.12 260) 100%);
+  --gradient-primary: linear-gradient(135deg, oklch(0.78 0.19 60), oklch(0.68 0.21 45));
   --gradient-thief: linear-gradient(135deg, oklch(0.65 0.26 25), oklch(0.50 0.24 350));
   --gradient-gold: linear-gradient(135deg, oklch(0.82 0.20 60), oklch(0.68 0.22 30));
-  --gradient-card: linear-gradient(160deg, oklch(0.22 0.09 250) 0%, oklch(0.14 0.07 258) 100%);
+  --gradient-card: linear-gradient(160deg, oklch(0.34 0.18 258) 0%, oklch(0.24 0.16 260) 100%);
 
-  /* Shadows — neon glow */
-  --shadow-neon: 0 0 30px color-mix(in oklab, var(--accent) 55%, transparent);
-  --shadow-neon-strong: 0 0 55px color-mix(in oklab, var(--accent) 80%, transparent);
-  --shadow-mint: 0 0 30px color-mix(in oklab, var(--neon-cyan) 55%, transparent);
+  /* Shadows */
+  --shadow-neon: 0 0 30px color-mix(in oklab, var(--primary) 50%, transparent);
+  --shadow-neon-strong: 0 0 55px color-mix(in oklab, var(--primary) 75%, transparent);
+  --shadow-mint: 0 0 30px color-mix(in oklab, var(--neon-cyan) 45%, transparent);
   --shadow-thief: 0 0 30px color-mix(in oklab, var(--thief) 55%, transparent);
-  --shadow-card: 0 10px 40px -10px oklch(0.03 0.04 260 / 0.8);
+  --shadow-card: 0 10px 40px -10px oklch(0.10 0.10 260 / 0.7);
 
   --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
