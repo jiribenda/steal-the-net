@@ -1,0 +1,1 @@
+ALTER TABLE public.games ADD COLUMN IF NOT EXISTS pause_seconds integer NOT NULL DEFAULT 15;

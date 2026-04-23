@@ -72,6 +72,7 @@ export type Database = {
           id: string
           last_summary: Json | null
           min_bet: number
+          pause_seconds: number
           round_seconds: number
           starting_chips: number
           status: string
@@ -86,6 +87,7 @@ export type Database = {
           id?: string
           last_summary?: Json | null
           min_bet?: number
+          pause_seconds?: number
           round_seconds?: number
           starting_chips?: number
           status?: string
@@ -100,6 +102,7 @@ export type Database = {
           id?: string
           last_summary?: Json | null
           min_bet?: number
+          pause_seconds?: number
           round_seconds?: number
           starting_chips?: number
           status?: string

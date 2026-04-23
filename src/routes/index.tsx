@@ -23,6 +23,7 @@ function Home() {
   const [joinCode, setJoinCode] = useState("");
   const [startingChips, setStartingChips] = useState(50);
   const [roundSeconds, setRoundSeconds] = useState(60);
+  const [pauseSeconds, setPauseSeconds] = useState(15);
   const [busy, setBusy] = useState<null | "create" | "join">(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -53,6 +54,7 @@ function Home() {
           host_client_id: clientId,
           starting_chips: startingChips,
           round_seconds: roundSeconds,
+          pause_seconds: pauseSeconds,
           min_bet: 5,
         })
         .select()
@@ -167,6 +169,14 @@ function Home() {
                   />
                 </Field>
               </div>
+              <Field label="Pauza po vypořádání (s)">
+                <input
+                  type="number" min={3} max={60}
+                  value={pauseSeconds}
+                  onChange={(e) => setPauseSeconds(Math.max(3, Math.min(60, Number(e.target.value) || 15)))}
+                  className="w-full rounded-lg border border-input bg-input/40 px-4 py-3 outline-none ring-primary focus:ring-2"
+                />
+              </Field>
               <button
                 onClick={createGame}
                 disabled={busy !== null}
