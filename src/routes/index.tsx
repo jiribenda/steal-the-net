@@ -122,8 +122,8 @@ function Home() {
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-card/40 px-3 py-1 text-xs font-medium uppercase tracking-widest text-neon-mint">
             Online · 2–8 hráčů · Realtime
           </div>
-          <h1 className="bg-gradient-primary bg-clip-text text-6xl font-black tracking-tight text-transparent md:text-7xl">
-            HEIST
+          <h1 className="bg-gradient-primary bg-clip-text px-4 py-2 text-5xl font-black leading-[1.15] tracking-tight text-transparent md:text-7xl">
+            (ne)pokradeš?
           </h1>
           <p className="mt-4 max-w-xl text-lg text-muted-foreground">
             Přihazuj do banku a zdvojnásob svůj vklad — nebo se staň zlodějem a odejdi s lupem.
