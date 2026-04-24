@@ -528,12 +528,11 @@ function PlayingView({
 
       {/* Summary */}
       {showSummary && (
-        <div className="bg-gradient-card float-in rounded-2xl border border-accent/40 p-6 shadow-mint">
-          <h3 className="text-lg font-bold text-accent">Vypořádání kola</h3>
-          <ul className="mt-3 space-y-1 text-sm">
-            {summary!.lines.map((l, i) => <li key={i}>{l}</li>)}
-          </ul>
-        </div>
+        <SummaryPanel
+          lines={summary!.lines}
+          pauseSeconds={game.pause_seconds ?? 15}
+          roundId={round.id}
+        />
       )}
     </div>
   );
@@ -747,6 +746,38 @@ function CenterMessage({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen items-center justify-center text-muted-foreground">
       {children}
+    </div>
+  );
+}
+
+function SummaryPanel({ lines, pauseSeconds, roundId }: { lines: string[]; pauseSeconds: number; roundId: string }) {
+  // Začni odpočet ve chvíli, kdy se objeví summary pro toto kolo
+  const [startedAt, setStartedAt] = useState<number>(() => Date.now());
+  const [now, setNow] = useState<number>(() => Date.now());
+
+  useEffect(() => {
+    setStartedAt(Date.now());
+  }, [roundId]);
+
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 250);
+    return () => clearInterval(id);
+  }, []);
+
+  const elapsed = Math.floor((now - startedAt) / 1000);
+  const remaining = Math.max(0, pauseSeconds - elapsed);
+
+  return (
+    <div className="bg-gradient-card float-in rounded-2xl border border-accent/40 p-6 shadow-mint">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h3 className="text-lg font-bold text-accent">Vypořádání kola</h3>
+        <div className="text-xs uppercase tracking-widest text-muted-foreground">
+          Další kolo začne za <span className="ml-1 text-base font-black tabular-nums text-neon-cyan">{remaining}s</span>
+        </div>
+      </div>
+      <ul className="mt-3 space-y-1 text-sm">
+        {lines.map((l, i) => <li key={i}>{l}</li>)}
+      </ul>
     </div>
   );
 }

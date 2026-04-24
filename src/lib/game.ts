@@ -49,32 +49,33 @@ export function settleNormalRound(
 
   let bankerDelta = 0;
 
+  // Helper — finální zůstatek hráče po update
+  const finalChipsOf = (pid: string) => {
+    const p = byId.get(pid)!;
+    const upd = playerUpdates[pid];
+    return upd?.chips ?? p.chips;
+  };
+
   if (thieves.length === 0) {
     // Banker doubles each bet
     for (const a of bettors) {
       const p = byId.get(a.player_id)!;
-      // chips were already deducted on submit; payout = a.amount * 2 (their bet returns + matching)
-      playerUpdates[p.id] = { chips: p.chips + a.amount * 2 };
-      summary.push(`💎 ${p.name} dostává ${a.amount * 2} (vklad ${a.amount} × 2)`);
+      const payout = a.amount * 2;
+      const newChips = p.chips + payout;
+      playerUpdates[p.id] = { chips: newChips };
+      summary.push(`💎 ${p.name} vsadil ${a.amount}, dostává ${payout} zpět (zisk +${a.amount}). Zůstává mu ${newChips} žetonů.`);
     }
-    bankerDelta = -totalPot; // banker paid out matching amount
+    bankerDelta = -totalPot;
   } else if (thieves.length === 1) {
-    // Lone thief takes all bets and leaves the game
     const t = thieves[0];
     const tp = byId.get(t.player_id)!;
-    playerUpdates[tp.id] = {
-      chips: 0,
-      status: "fled",
-      fled_with: tp.chips + totalPot,
-    };
-    summary.push(`🦝 ${tp.name} ukradl ${totalPot} a mizí ze hry s ${tp.chips + totalPot} žetony!`);
+    const loot = tp.chips + totalPot;
+    playerUpdates[tp.id] = { chips: 0, status: "fled", fled_with: loot };
+    summary.push(`🦝 ${tp.name} ukradl ${totalPot} žetonů z banku a mizí ze hry s ${loot} žetony!`);
     for (const a of bettors) {
       const p = byId.get(a.player_id)!;
-      summary.push(`😢 ${p.name} přišel o ${a.amount}`);
-      // chips were deducted at submit time; nothing more to do
-      if (p.chips <= 0 && !playerUpdates[p.id]) {
-        playerUpdates[p.id] = { status: "busted" };
-      }
+      // chips už byly stržené při submitu
+      summary.push(`😢 ${p.name} přišel o vklad ${a.amount}. Zbývá mu ${p.chips} žetonů.`);
     }
   } else if (thieves.length === 2) {
     const half = Math.floor(totalPot / 2);
@@ -82,19 +83,13 @@ export function settleNormalRound(
     thieves.forEach((t, i) => {
       const tp = byId.get(t.player_id)!;
       const share = half + (i === 0 ? remainder : 0);
-      playerUpdates[tp.id] = {
-        chips: 0,
-        status: "fled",
-        fled_with: tp.chips + share,
-      };
-      summary.push(`🦝🦝 ${tp.name} si odnáší ${share} a opouští hru s ${tp.chips + share}`);
+      const loot = tp.chips + share;
+      playerUpdates[tp.id] = { chips: 0, status: "fled", fled_with: loot };
+      summary.push(`🦝🦝 ${tp.name} si odnáší ${share} žetonů a opouští hru s ${loot} žetony.`);
     });
     for (const a of bettors) {
       const p = byId.get(a.player_id)!;
-      summary.push(`😢 ${p.name} přišel o ${a.amount}`);
-      if (p.chips <= 0 && !playerUpdates[p.id]) {
-        playerUpdates[p.id] = { status: "busted" };
-      }
+      summary.push(`😢 ${p.name} přišel o vklad ${a.amount}. Zbývá mu ${p.chips} žetonů.`);
     }
   } else {
     // 3+ thieves: banker takes everything
@@ -103,26 +98,24 @@ export function settleNormalRound(
       const tp = byId.get(t.player_id)!;
       confiscated += tp.chips;
       playerUpdates[tp.id] = { chips: 0, status: "busted" };
-      summary.push(`🚨 ${tp.name} chycen! Přišel o všechny žetony.`);
+      summary.push(`🚨 ${tp.name} chycen při krádeži! Přišel o všech ${tp.chips} žetonů a opouští hru.`);
     }
     bankerDelta = confiscated;
     summary.push(`🏦 Bankéř zabavuje ${confiscated} žetonů.`);
     for (const a of bettors) {
       const p = byId.get(a.player_id)!;
-      summary.push(`😢 ${p.name} přišel o vklad ${a.amount}`);
-      if (p.chips <= 0 && !playerUpdates[p.id]) {
-        playerUpdates[p.id] = { status: "busted" };
-      }
+      summary.push(`😢 ${p.name} přišel o vklad ${a.amount}. Zbývá mu ${p.chips} žetonů.`);
     }
   }
 
-  // Bust check for bettors with 0 chips left
+  // Bust check pro hráče, kterým došly žetony
   for (const p of players) {
     const upd = playerUpdates[p.id];
     const finalChips = upd?.chips ?? p.chips;
     const finalStatus = upd?.status ?? p.status;
     if (finalStatus === "active" && finalChips <= 0) {
       playerUpdates[p.id] = { ...upd, chips: 0, status: "busted" };
+      summary.push(`💀 ${p.name} přišel o všechny žetony a opouští hru.`);
     }
   }
 
