@@ -548,7 +548,8 @@ function PlayerCard({
   isFinale: boolean;
   isMe: boolean;
 }) {
-  const isOut = player.status !== "active" || player.chips <= 0;
+  // Active players with 0 chips are "all-in" mid-round (sázka stržená, výsledek se ještě počítá) — neoznačovat jako mimo hru.
+  const isOut = player.status !== "active";
   const revealed = roundStatus !== "collecting";
   const submitted = !!action;
 
@@ -564,7 +565,7 @@ function PlayerCard({
             <div className="text-xs text-muted-foreground">
               {player.status === "fled" && `🦝 utekl s ${player.fled_with}`}
               {player.status === "busted" && "💀 vypadl"}
-              {player.status === "active" && `${player.chips} žetonů`}
+              {player.status === "active" && (player.chips > 0 ? `${player.chips} žetonů` : "all-in")}
             </div>
           </div>
         </div>
