@@ -153,28 +153,31 @@ function Home() {
               </Field>
               <div className="grid grid-cols-2 gap-3">
                 <Field label="Počáteční žetony">
-                  <input
-                    type="number" min={10} max={1000}
+                  <NumberField
                     value={startingChips}
-                    onChange={(e) => setStartingChips(Math.max(10, Math.min(1000, Number(e.target.value) || 50)))}
-                    className="w-full rounded-lg border border-input bg-input/40 px-4 py-3 outline-none ring-primary focus:ring-2"
+                    onChange={setStartingChips}
+                    min={10}
+                    max={1000}
+                    fallback={50}
                   />
                 </Field>
                 <Field label="Timer kola (s)">
-                  <input
-                    type="number" min={15} max={120}
+                  <NumberField
                     value={roundSeconds}
-                    onChange={(e) => setRoundSeconds(Math.max(15, Math.min(120, Number(e.target.value) || 60)))}
-                    className="w-full rounded-lg border border-input bg-input/40 px-4 py-3 outline-none ring-primary focus:ring-2"
+                    onChange={setRoundSeconds}
+                    min={15}
+                    max={120}
+                    fallback={60}
                   />
                 </Field>
               </div>
               <Field label="Pauza po vypořádání (s)">
-                <input
-                  type="number" min={3} max={60}
+                <NumberField
                   value={pauseSeconds}
-                  onChange={(e) => setPauseSeconds(Math.max(3, Math.min(60, Number(e.target.value) || 15)))}
-                  className="w-full rounded-lg border border-input bg-input/40 px-4 py-3 outline-none ring-primary focus:ring-2"
+                  onChange={setPauseSeconds}
+                  min={3}
+                  max={60}
+                  fallback={15}
                 />
               </Field>
               <button
