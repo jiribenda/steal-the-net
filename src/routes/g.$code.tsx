@@ -548,7 +548,8 @@ function PlayerCard({
   isFinale: boolean;
   isMe: boolean;
 }) {
-  const isOut = player.status !== "active" || player.chips <= 0;
+  // Active players with 0 chips are "all-in" mid-round (sázka stržená, výsledek se ještě počítá) — neoznačovat jako mimo hru.
+  const isOut = player.status !== "active";
   const revealed = roundStatus !== "collecting";
   const submitted = !!action;
 
