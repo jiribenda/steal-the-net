@@ -259,6 +259,54 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
+function NumberField({
+  value, onChange, min, max, fallback,
+}: { value: number; onChange: (n: number) => void; min: number; max: number; fallback: number }) {
+  const [text, setText] = useState(String(value));
+  useEffect(() => { setText(String(value)); }, [value]);
+
+  function commit(raw: string) {
+    const n = Number(raw);
+    if (!Number.isFinite(n)) { onChange(fallback); setText(String(fallback)); return; }
+    const clamped = Math.max(min, Math.min(max, Math.round(n)));
+    onChange(clamped);
+    setText(String(clamped));
+  }
+
+  function step(delta: number) {
+    const base = Number.isFinite(Number(text)) ? Number(text) : value;
+    const next = Math.max(min, Math.min(max, Math.round(base) + delta));
+    onChange(next);
+    setText(String(next));
+  }
+
+  return (
+    <div className="flex items-stretch gap-2">
+      <button
+        type="button"
+        onClick={() => step(-1)}
+        className="rounded-lg border border-input bg-input/40 px-3 text-lg font-bold hover:bg-input/60"
+        aria-label="Snížit"
+      >−</button>
+      <input
+        type="text"
+        inputMode="numeric"
+        value={text}
+        onChange={(e) => setText(e.target.value.replace(/[^\d-]/g, ""))}
+        onBlur={(e) => commit(e.target.value)}
+        onKeyDown={(e) => { if (e.key === "Enter") (e.target as HTMLInputElement).blur(); }}
+        className="w-full rounded-lg border border-input bg-input/40 px-3 py-3 text-center outline-none ring-primary focus:ring-2"
+      />
+      <button
+        type="button"
+        onClick={() => step(1)}
+        className="rounded-lg border border-input bg-input/40 px-3 text-lg font-bold hover:bg-input/60"
+        aria-label="Zvýšit"
+      >+</button>
+    </div>
+  );
+}
+
 function Step({ n, title, desc }: { n: number; title: string; desc: string }) {
   return (
     <div className="bg-gradient-card rounded-2xl border border-border p-6 shadow-card">
