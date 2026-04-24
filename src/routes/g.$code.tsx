@@ -528,12 +528,11 @@ function PlayingView({
 
       {/* Summary */}
       {showSummary && (
-        <div className="bg-gradient-card float-in rounded-2xl border border-accent/40 p-6 shadow-mint">
-          <h3 className="text-lg font-bold text-accent">Vypořádání kola</h3>
-          <ul className="mt-3 space-y-1 text-sm">
-            {summary!.lines.map((l, i) => <li key={i}>{l}</li>)}
-          </ul>
-        </div>
+        <SummaryPanel
+          lines={summary!.lines}
+          pauseSeconds={game.pause_seconds ?? 15}
+          roundId={round.id}
+        />
       )}
     </div>
   );
