@@ -40,14 +40,14 @@
 :root {
   --radius: 0.875rem;
 
-  /* Royal blue background (matches reference image) */
-  --background: oklch(0.32 0.18 258);
-  --foreground: oklch(0.99 0.01 240);
+  /* Royal blue background — derived from rgb(22,123,232) = oklch(0.59 0.186 255) */
+  --background: oklch(0.32 0.16 255);
+  --foreground: oklch(0.99 0.01 255);
 
-  --card: oklch(0.28 0.17 258);
-  --card-foreground: oklch(0.99 0.01 240);
-  --popover: oklch(0.28 0.17 258);
-  --popover-foreground: oklch(0.99 0.01 240);
+  --card: oklch(0.28 0.15 255);
+  --card-foreground: oklch(0.99 0.01 255);
+  --popover: oklch(0.28 0.15 255);
+  --popover-foreground: oklch(0.99 0.01 255);
 
   /* Orange primary rgb(255, 142, 19) */
   --primary: oklch(0.74 0.19 56);
