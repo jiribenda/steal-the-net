@@ -82,12 +82,12 @@
   --neon-violet: oklch(0.55 0.22 280);
   --neon-pink: oklch(0.74 0.22 30);
 
-  /* Royal-blue radial like reference image */
-  --gradient-bg: radial-gradient(ellipse at center, oklch(0.42 0.20 255) 0%, oklch(0.26 0.18 258) 55%, oklch(0.16 0.12 260) 100%);
+  /* Royal-blue radial derived from rgb(22,123,232) — base oklch(0.59 0.186 255) */
+  --gradient-bg: radial-gradient(ellipse at center, oklch(0.59 0.186 255) 0%, oklch(0.36 0.17 255) 55%, oklch(0.18 0.10 255) 100%);
   --gradient-primary: linear-gradient(135deg, oklch(0.78 0.19 60), oklch(0.68 0.21 45));
   --gradient-thief: linear-gradient(135deg, oklch(0.65 0.26 25), oklch(0.50 0.24 350));
   --gradient-gold: linear-gradient(135deg, oklch(0.82 0.20 60), oklch(0.68 0.22 30));
-  --gradient-card: linear-gradient(160deg, oklch(0.34 0.18 258) 0%, oklch(0.24 0.16 260) 100%);
+  --gradient-card: linear-gradient(160deg, oklch(0.40 0.17 255) 0%, oklch(0.24 0.14 255) 100%);
 
   /* Shadows */
   --shadow-neon: 0 0 30px color-mix(in oklab, var(--primary) 50%, transparent);
