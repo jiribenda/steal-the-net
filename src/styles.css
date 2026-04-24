@@ -40,40 +40,40 @@
 :root {
   --radius: 0.875rem;
 
-  /* Royal blue background (matches reference image) */
-  --background: oklch(0.32 0.18 258);
-  --foreground: oklch(0.99 0.01 240);
+  /* Royal blue background — derived from rgb(22,123,232) = oklch(0.59 0.186 255) */
+  --background: oklch(0.32 0.16 255);
+  --foreground: oklch(0.99 0.01 255);
 
-  --card: oklch(0.28 0.17 258);
-  --card-foreground: oklch(0.99 0.01 240);
-  --popover: oklch(0.28 0.17 258);
-  --popover-foreground: oklch(0.99 0.01 240);
+  --card: oklch(0.28 0.15 255);
+  --card-foreground: oklch(0.99 0.01 255);
+  --popover: oklch(0.28 0.15 255);
+  --popover-foreground: oklch(0.99 0.01 255);
 
   /* Orange primary rgb(255, 142, 19) */
   --primary: oklch(0.74 0.19 56);
   --primary-foreground: oklch(0.16 0.05 258);
 
-  --secondary: oklch(0.36 0.18 258);
-  --secondary-foreground: oklch(0.99 0.01 240);
+  --secondary: oklch(0.36 0.16 255);
+  --secondary-foreground: oklch(0.99 0.01 255);
 
-  --muted: oklch(0.34 0.16 258);
-  --muted-foreground: oklch(0.88 0.04 240);
+  --muted: oklch(0.34 0.15 255);
+  --muted-foreground: oklch(0.88 0.04 255);
 
   /* Accent — same orange */
   --accent: oklch(0.74 0.19 56);
-  --accent-foreground: oklch(0.16 0.05 258);
+  --accent-foreground: oklch(0.16 0.05 255);
 
   --destructive: oklch(0.62 0.24 25);
   --destructive-foreground: oklch(0.99 0.01 240);
 
   --success: oklch(0.78 0.16 160);
-  --success-foreground: oklch(0.16 0.05 258);
+  --success-foreground: oklch(0.16 0.05 255);
 
   --thief: oklch(0.68 0.24 35);
   --thief-foreground: oklch(0.99 0.01 240);
 
-  --border: oklch(0.48 0.18 258);
-  --input: oklch(0.34 0.16 258);
+  --border: oklch(0.48 0.17 255);
+  --input: oklch(0.34 0.15 255);
   --ring: oklch(0.74 0.19 56);
 
   /* Brand */
@@ -82,12 +82,12 @@
   --neon-violet: oklch(0.55 0.22 280);
   --neon-pink: oklch(0.74 0.22 30);
 
-  /* Royal-blue radial like reference image */
-  --gradient-bg: radial-gradient(ellipse at center, oklch(0.42 0.20 255) 0%, oklch(0.26 0.18 258) 55%, oklch(0.16 0.12 260) 100%);
+  /* Royal-blue radial derived from rgb(22,123,232) — base oklch(0.59 0.186 255) */
+  --gradient-bg: radial-gradient(ellipse at center, oklch(0.59 0.186 255) 0%, oklch(0.36 0.17 255) 55%, oklch(0.18 0.10 255) 100%);
   --gradient-primary: linear-gradient(135deg, oklch(0.78 0.19 60), oklch(0.68 0.21 45));
   --gradient-thief: linear-gradient(135deg, oklch(0.65 0.26 25), oklch(0.50 0.24 350));
   --gradient-gold: linear-gradient(135deg, oklch(0.82 0.20 60), oklch(0.68 0.22 30));
-  --gradient-card: linear-gradient(160deg, oklch(0.34 0.18 258) 0%, oklch(0.24 0.16 260) 100%);
+  --gradient-card: linear-gradient(160deg, oklch(0.40 0.17 255) 0%, oklch(0.24 0.14 255) 100%);
 
   /* Shadows */
   --shadow-neon: 0 0 30px color-mix(in oklab, var(--primary) 50%, transparent);
