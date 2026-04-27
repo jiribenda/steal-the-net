@@ -40,60 +40,60 @@
 :root {
   --radius: 0.875rem;
 
-  /* Tipsport-inspired deep blue with warm orange accents */
-  --background: oklch(0.27 0.11 253);
-  --foreground: oklch(0.98 0.01 245);
+  /* Tipsport page style: light grey-blue content, dark blue text, strong blue/orange accents */
+  --background: oklch(0.87 0.018 246);
+  --foreground: oklch(0.24 0.055 250);
 
-  --card: oklch(0.34 0.09 248);
-  --card-foreground: oklch(0.98 0.01 245);
-  --popover: oklch(0.34 0.09 248);
-  --popover-foreground: oklch(0.98 0.01 245);
+  --card: oklch(0.93 0.018 246);
+  --card-foreground: oklch(0.24 0.055 250);
+  --popover: oklch(0.93 0.018 246);
+  --popover-foreground: oklch(0.24 0.055 250);
 
-  /* Tipsport-like amber/orange controls */
-  --primary: oklch(0.66 0.16 62);
-  --primary-foreground: oklch(0.18 0.05 252);
+  /* Tipsport-like orange CTA / active underline */
+  --primary: oklch(0.58 0.14 58);
+  --primary-foreground: oklch(0.99 0.006 245);
 
-  --secondary: oklch(0.45 0.08 248);
-  --secondary-foreground: oklch(0.98 0.01 245);
+  --secondary: oklch(0.80 0.045 247);
+  --secondary-foreground: oklch(0.28 0.075 250);
 
-  --muted: oklch(0.50 0.04 245);
-  --muted-foreground: oklch(0.86 0.02 245);
+  --muted: oklch(0.82 0.022 246);
+  --muted-foreground: oklch(0.42 0.035 250);
 
-  --accent: oklch(0.66 0.16 62);
-  --accent-foreground: oklch(0.18 0.05 252);
+  --accent: oklch(0.43 0.145 253);
+  --accent-foreground: oklch(0.99 0.006 245);
 
   --destructive: oklch(0.62 0.24 25);
   --destructive-foreground: oklch(0.99 0.01 240);
 
-  --success: oklch(0.72 0.13 155);
-  --success-foreground: oklch(0.18 0.05 252);
+  --success: oklch(0.58 0.12 150);
+  --success-foreground: oklch(0.99 0.006 245);
 
   --thief: oklch(0.68 0.24 35);
   --thief-foreground: oklch(0.99 0.01 240);
 
-  --border: oklch(0.56 0.05 245);
-  --input: oklch(0.42 0.07 248);
-  --ring: oklch(0.66 0.16 62);
+  --border: oklch(0.72 0.025 246);
+  --input: oklch(0.89 0.018 246);
+  --ring: oklch(0.43 0.145 253);
 
   /* Brand */
-  --neon-cyan: oklch(0.85 0.14 230);
-  --neon-mint: oklch(0.92 0.05 230);
+  --neon-cyan: oklch(0.43 0.145 253);
+  --neon-mint: oklch(0.38 0.12 253);
   --neon-violet: oklch(0.55 0.22 280);
   --neon-pink: oklch(0.74 0.22 30);
 
-  /* Dark blue page depth with Tipsport-style orange CTAs */
-  --gradient-bg: radial-gradient(ellipse at center, oklch(0.43 0.12 252) 0%, oklch(0.30 0.11 253) 52%, oklch(0.17 0.07 255) 100%);
-  --gradient-primary: linear-gradient(135deg, oklch(0.72 0.17 66), oklch(0.58 0.15 55));
+  /* Light Tipsport-like page with blue header-style depth and orange CTAs */
+  --gradient-bg: linear-gradient(180deg, oklch(0.40 0.15 253) 0 6rem, oklch(0.87 0.018 246) 6rem 100%);
+  --gradient-primary: linear-gradient(135deg, oklch(0.66 0.16 64), oklch(0.54 0.13 56));
   --gradient-thief: linear-gradient(135deg, oklch(0.65 0.26 25), oklch(0.50 0.24 350));
   --gradient-gold: linear-gradient(135deg, oklch(0.82 0.20 60), oklch(0.68 0.22 30));
-  --gradient-card: linear-gradient(160deg, oklch(0.43 0.09 248) 0%, oklch(0.24 0.08 253) 100%);
+  --gradient-card: linear-gradient(180deg, oklch(0.95 0.014 246) 0%, oklch(0.88 0.022 246) 100%);
 
   /* Shadows */
-  --shadow-neon: 0 0 30px color-mix(in oklab, var(--primary) 50%, transparent);
-  --shadow-neon-strong: 0 0 55px color-mix(in oklab, var(--primary) 75%, transparent);
-  --shadow-mint: 0 0 30px color-mix(in oklab, var(--neon-cyan) 45%, transparent);
+  --shadow-neon: 0 6px 14px color-mix(in oklab, var(--primary) 28%, transparent);
+  --shadow-neon-strong: 0 8px 18px color-mix(in oklab, var(--primary) 42%, transparent);
+  --shadow-mint: 0 6px 18px color-mix(in oklab, var(--accent) 22%, transparent);
   --shadow-thief: 0 0 30px color-mix(in oklab, var(--thief) 55%, transparent);
-  --shadow-card: 0 10px 40px -10px oklch(0.10 0.10 260 / 0.7);
+  --shadow-card: 0 8px 22px -14px oklch(0.22 0.06 250 / 0.45);
 
   --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
