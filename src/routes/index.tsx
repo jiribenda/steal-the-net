@@ -11,7 +11,7 @@ export const Route = createFileRoute("/")({
   component: Home,
   head: () => ({
     meta: [
-      { title: "Heist — online hra o žetony a zloděje" },
+      { title: "Dilema — online hra o žetony a zloděje" },
       { name: "description", content: "Online multiplayer hra o riskování, žetony a zloděje. Přihazuj, nebo kraď a odejdi s lupem." },
     ],
   }),
@@ -125,7 +125,7 @@ function Home() {
             Online · 2–8 hráčů · Realtime
           </div>
           <h1 className="px-4 py-2 text-5xl font-black leading-[1.15] tracking-tight text-white md:text-7xl drop-shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
-            (ne)pokradeš?
+            Dilema
           </h1>
           <p className="mt-4 max-w-xl text-lg text-muted-foreground">
             Přihazuj do banku a zdvojnásob svůj vklad — nebo se staň zlodějem a odejdi s lupem.
