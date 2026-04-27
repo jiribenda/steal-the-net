@@ -74,6 +74,7 @@
   --border: oklch(0.72 0.025 246);
   --input: oklch(0.89 0.018 246);
   --ring: oklch(0.43 0.145 253);
+  --brand-header: rgb(22 123 232);
 
   /* Brand */
   --neon-cyan: oklch(0.43 0.145 253);
@@ -81,8 +82,8 @@
   --neon-violet: oklch(0.55 0.22 280);
   --neon-pink: oklch(0.74 0.22 30);
 
-  /* Light Tipsport-like page with fixed blue header strip and orange CTAs */
-  --gradient-bg: linear-gradient(180deg, rgb(22 123 232) 0 13rem, oklch(0.87 0.018 246) 13rem 100%);
+  /* Light Tipsport-like page with a dedicated blue header strip on the home route */
+  --gradient-bg: var(--background);
   --gradient-primary: linear-gradient(135deg, oklch(0.66 0.16 64), oklch(0.54 0.13 56));
   --gradient-thief: linear-gradient(135deg, oklch(0.65 0.26 25), oklch(0.50 0.24 350));
   --gradient-gold: linear-gradient(135deg, oklch(0.82 0.20 60), oklch(0.68 0.22 30));
@@ -127,6 +128,19 @@
   .text-neon-mint      { color: var(--neon-mint); }
   .text-neon-violet    { color: var(--neon-violet); }
   .text-neon-pink      { color: var(--neon-pink); }
+
+  .home-page {
+    position: relative;
+    isolation: isolate;
+  }
+  .home-page::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    z-index: -1;
+    height: 11.875rem;
+    background: var(--brand-header);
+  }
 
   .glow-pulse {
     animation: glow-pulse 2s ease-in-out infinite;
