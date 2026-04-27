@@ -9,9 +9,15 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PravidlaRouteImport } from './routes/pravidla'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GCodeRouteImport } from './routes/g.$code'
 
+const PravidlaRoute = PravidlaRouteImport.update({
+  id: '/pravidla',
+  path: '/pravidla',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -25,32 +31,43 @@ const GCodeRoute = GCodeRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/pravidla': typeof PravidlaRoute
   '/g/$code': typeof GCodeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/pravidla': typeof PravidlaRoute
   '/g/$code': typeof GCodeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/pravidla': typeof PravidlaRoute
   '/g/$code': typeof GCodeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/g/$code'
+  fullPaths: '/' | '/pravidla' | '/g/$code'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/g/$code'
-  id: '__root__' | '/' | '/g/$code'
+  to: '/' | '/pravidla' | '/g/$code'
+  id: '__root__' | '/' | '/pravidla' | '/g/$code'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PravidlaRoute: typeof PravidlaRoute
   GCodeRoute: typeof GCodeRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/pravidla': {
+      id: '/pravidla'
+      path: '/pravidla'
+      fullPath: '/pravidla'
+      preLoaderRoute: typeof PravidlaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PravidlaRoute: PravidlaRoute,
   GCodeRoute: GCodeRoute,
 }
 export const routeTree = rootRouteImport
