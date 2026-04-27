@@ -127,7 +127,7 @@ function Home() {
           <h1 className="px-4 py-2 text-5xl font-black leading-[1.15] tracking-tight text-white md:text-7xl drop-shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
             Dilema
           </h1>
-          <p className="mt-4 max-w-xl text-lg text-muted-foreground">
+          <p className="mt-4 max-w-3xl text-lg text-muted-foreground">
             Přihazuj do banku a zdvojnásob svůj vklad — nebo se staň zlodějem a odejdi s lupem.
             Pozor na ostatní hráče: kdo krade, ne vždy přežije.{" "}
             <Link to="/pravidla" className="font-semibold text-primary underline-offset-4 hover:underline">
