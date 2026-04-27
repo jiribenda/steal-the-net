@@ -81,8 +81,8 @@
   --neon-violet: oklch(0.55 0.22 280);
   --neon-pink: oklch(0.74 0.22 30);
 
-  /* Light Tipsport-like page with blue header-style depth and orange CTAs */
-  --gradient-bg: linear-gradient(180deg, oklch(0.40 0.15 253) 0 6rem, oklch(0.87 0.018 246) 6rem 100%);
+  /* Light Tipsport-like page with fixed blue header strip and orange CTAs */
+  --gradient-bg: linear-gradient(180deg, rgb(22 123 232) 0 11.75rem, oklch(0.87 0.018 246) 11.75rem 100%);
   --gradient-primary: linear-gradient(135deg, oklch(0.66 0.16 64), oklch(0.54 0.13 56));
   --gradient-thief: linear-gradient(135deg, oklch(0.65 0.26 25), oklch(0.50 0.24 350));
   --gradient-gold: linear-gradient(135deg, oklch(0.82 0.20 60), oklch(0.68 0.22 30));
