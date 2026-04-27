@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { generateRoomCode } from "@/lib/game";
@@ -129,7 +129,11 @@ function Home() {
           </h1>
           <p className="mt-4 max-w-xl text-lg text-muted-foreground">
             Přihazuj do banku a zdvojnásob svůj vklad — nebo se staň zlodějem a odejdi s lupem.
-            Pozor na ostatní hráče: kdo krade, ne vždy přežije.
+            Pozor na ostatní hráče: kdo krade, ne vždy přežije.{" "}
+            <Link to="/pravidla" className="font-semibold text-primary underline-offset-4 hover:underline">
+              Úplná pravidla zde
+            </Link>
+          .
           </p>
         </header>
 
