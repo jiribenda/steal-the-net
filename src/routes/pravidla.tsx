@@ -69,9 +69,6 @@ function RulesPage() {
 
           <section>
             <h2 className="mb-3 text-2xl font-bold text-foreground">Zdržení</h2>
-            <h3 className="font-bold text-foreground">Dlouhé kolo (1 den)</h3>
-            <p>Pokud hráč ve stanoveném čase kolo neodehraje, jeho žetony si dělí rovným dílem ostatní hráči.</p>
-            <h3 className="mt-4 font-bold text-foreground">Krátké kolo (timeout 1 min)</h3>
             <p>Pokud hráč ve stanoveném čase kolo neodehraje, automaticky se přihazuje minimální vklad. Jedná-li se o poslední kolo, hráč nekrade.</p>
           </section>
 
