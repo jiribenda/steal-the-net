@@ -129,15 +129,16 @@ function Home() {
   }
 
   return (
-    <main className="home-page min-h-screen px-6 py-12">
-      <div className="mx-auto max-w-6xl">
-        <header className="mb-10 text-center">
-          <div className="bg-brand-header px-6 py-8 text-brand-header-foreground md:px-10 md:py-10">
+    <main className="home-page min-h-screen">
+      <header className="mb-10 text-center">
+        <div className="bg-brand-header px-6 py-8 text-brand-header-foreground md:px-10 md:py-10">
+          <div className="mx-auto max-w-6xl">
             <h1 className="text-5xl font-black leading-tight tracking-tight md:text-7xl">
               Dilema
             </h1>
           </div>
-          <div className="mt-4 px-2 md:px-8">
+        </div>
+        <div className="mx-auto mt-4 max-w-6xl px-6 md:px-8">
             <p className="mx-auto max-w-4xl text-base leading-relaxed text-foreground md:text-lg">
               Přihazuj do banku a zdvojnásob svůj vklad — nebo se staň zlodějem a odejdi s lupem.
               Pozor na ostatní hráče: kdo krade, ne vždy přežije.{" "}
@@ -146,8 +147,10 @@ function Home() {
               </Link>
               .
             </p>
-          </div>
-        </header>
+        </div>
+      </header>
+
+      <div className="mx-auto max-w-6xl px-6 pb-12">
 
         <div className="grid gap-6 md:grid-cols-2">
           {/* Create */}
