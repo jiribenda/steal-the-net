@@ -679,9 +679,11 @@ function ActionPanel({
             <button
               disabled={chips <= 0 || lock}
               onClick={() => handle({ isThief: false, amount: chips })}
-              className="bg-gradient-gold relative flex h-16 min-w-[5rem] items-center justify-center rounded-2xl px-3 font-black uppercase tracking-wider text-background shadow-neon disabled:cursor-not-allowed disabled:opacity-30"
+              className="group relative flex h-16 w-16 flex-col items-center justify-center rounded-full border-2 border-primary/60 bg-background/60 text-center font-black text-neon-cyan transition hover:border-primary hover:shadow-neon disabled:cursor-not-allowed disabled:opacity-30"
             >
-              All-in<br /><span className="text-xs">({chips})</span>
+              <img src={chipImg} alt="" width={48} height={48} className="absolute inset-0 m-auto h-12 w-12 opacity-40 group-hover:opacity-70" />
+              <span className="relative text-[0.68rem] uppercase leading-none">All-in</span>
+              <span className="relative mt-0.5 text-xs leading-none">{chips}</span>
             </button>
           </div>
         </div>
@@ -706,7 +708,7 @@ function ActionPanel({
       <button
         disabled={lock}
         onClick={() => handle({ isThief: true, amount: 0 })}
-        className="bg-gradient-thief shadow-thief group flex w-full items-center justify-center gap-3 rounded-xl px-6 py-4 text-lg font-bold uppercase tracking-wider text-thief-foreground disabled:cursor-not-allowed disabled:opacity-50"
+        className="shadow-neon group flex w-full items-center justify-center gap-3 rounded-xl border border-primary bg-primary px-6 py-4 text-lg font-bold uppercase tracking-wider text-primary-foreground transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50"
       >
         <img src={thiefImg} alt="" width={64} height={64} className="h-10 w-10" />
         Krást
