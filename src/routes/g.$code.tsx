@@ -634,18 +634,18 @@ function ActionPanel({
   };
   const lock = submitting;
   return (
-    <div className={`bg-gradient-card rounded-2xl border border-border p-6 shadow-card ${lock ? "opacity-70" : ""}`}>
-      <h3 className="text-lg font-bold">{isFinale ? "Finále — poslední rozhodnutí" : "Tvoje volba"}</h3>
-      <p className="mt-1 text-sm text-muted-foreground">
+    <div className={`bg-gradient-card rounded-xl border border-border p-3 shadow-card sm:rounded-2xl sm:p-6 ${lock ? "opacity-70" : ""}`}>
+      <h3 className="text-base font-bold sm:text-lg">{isFinale ? "Finále — poslední rozhodnutí" : "Tvoje volba"}</h3>
+      <p className="mt-0.5 text-xs text-muted-foreground sm:mt-1 sm:text-sm">
         {isFinale
           ? "Buď čestný a riskuj rozdělení banku, nebo zraď a vezmi vše."
           : "Vyber svůj vklad nebo se rozhodni krást."}
       </p>
 
       {!isFinale && (
-        <div className="mt-5">
-          <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Vklady</div>
-          <div className="flex flex-wrap gap-2">
+        <div className="mt-3 sm:mt-5">
+          <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground sm:mb-2 sm:text-xs">Vklady</div>
+          <div className="flex flex-wrap gap-1.5 sm:gap-2">
             {BET_OPTIONS.map((opt) => {
               const disabled = opt > chips || lock;
               return (
@@ -653,9 +653,9 @@ function ActionPanel({
                   key={opt}
                   disabled={disabled}
                   onClick={() => handle({ isThief: false, amount: opt })}
-                  className="group relative flex h-16 w-16 flex-col items-center justify-center rounded-full border-2 border-primary/60 bg-background/60 font-bold text-neon-cyan transition hover:border-primary hover:shadow-neon disabled:cursor-not-allowed disabled:opacity-30"
+                  className="group relative flex h-11 w-11 flex-col items-center justify-center rounded-full border-2 border-primary/60 bg-background/60 text-sm font-bold text-neon-cyan transition hover:border-primary hover:shadow-neon disabled:cursor-not-allowed disabled:opacity-30 sm:h-16 sm:w-16 sm:text-base"
                 >
-                  <img src={chipImg} alt="" width={48} height={48} className="absolute inset-0 m-auto h-12 w-12 opacity-40 group-hover:opacity-70" />
+                  <img src={chipImg} alt="" width={48} height={48} className="absolute inset-0 m-auto h-8 w-8 opacity-40 group-hover:opacity-70 sm:h-12 sm:w-12" />
                   <span className="relative">{opt}</span>
                 </button>
               );
@@ -663,11 +663,11 @@ function ActionPanel({
             <button
               disabled={chips <= 0 || lock}
               onClick={() => handle({ isThief: false, amount: chips })}
-              className="group relative flex h-16 w-16 flex-col items-center justify-center rounded-full border-2 border-primary/60 bg-background/60 text-center font-black text-neon-cyan transition hover:border-primary hover:shadow-neon disabled:cursor-not-allowed disabled:opacity-30"
+              className="group relative flex h-11 w-11 flex-col items-center justify-center rounded-full border-2 border-primary/60 bg-background/60 text-center font-black text-neon-cyan transition hover:border-primary hover:shadow-neon disabled:cursor-not-allowed disabled:opacity-30 sm:h-16 sm:w-16"
             >
-              <img src={chipImg} alt="" width={48} height={48} className="absolute inset-0 m-auto h-12 w-12 opacity-40 group-hover:opacity-70" />
-              <span className="relative text-[0.68rem] uppercase leading-none">All-in</span>
-              <span className="relative mt-0.5 text-xs leading-none">{chips}</span>
+              <img src={chipImg} alt="" width={48} height={48} className="absolute inset-0 m-auto h-8 w-8 opacity-40 group-hover:opacity-70 sm:h-12 sm:w-12" />
+              <span className="relative text-[0.55rem] uppercase leading-none sm:text-[0.68rem]">All-in</span>
+              <span className="relative mt-0.5 text-[10px] leading-none sm:text-xs">{chips}</span>
             </button>
           </div>
         </div>
@@ -685,16 +685,16 @@ function ActionPanel({
         </div>
       )}
 
-      <div className="my-5 flex items-center gap-3 text-xs uppercase tracking-widest text-muted-foreground">
+      <div className="my-3 flex items-center gap-3 text-[10px] uppercase tracking-widest text-muted-foreground sm:my-5 sm:text-xs">
         <div className="h-px flex-1 bg-border" /> nebo <div className="h-px flex-1 bg-border" />
       </div>
 
       <button
         disabled={lock}
         onClick={() => handle({ isThief: true, amount: 0 })}
-        className="shadow-neon group flex w-full items-center justify-center gap-3 rounded-xl border border-primary bg-primary px-6 py-4 text-lg font-bold uppercase tracking-wider text-primary-foreground transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50"
+        className="shadow-neon group flex w-full items-center justify-center gap-2 rounded-lg border border-primary bg-primary px-4 py-2.5 text-base font-bold uppercase tracking-wider text-primary-foreground transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50 sm:gap-3 sm:rounded-xl sm:px-6 sm:py-4 sm:text-lg"
       >
-        <img src={thiefImg} alt="" width={64} height={64} className="h-10 w-10" />
+        <img src={thiefImg} alt="" width={64} height={64} className="h-7 w-7 sm:h-10 sm:w-10" />
         Krást
       </button>
 
