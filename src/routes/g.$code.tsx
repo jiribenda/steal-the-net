@@ -74,7 +74,13 @@ function GameRoom() {
         const [{ data: freshGame }, { data: ps }, { data: rs }] = await Promise.all([
           supabase.from("games").select("*").eq("id", g.id).maybeSingle(),
           supabase.from("players").select("*").eq("game_id", g.id).order("seat"),
-          supabase.from("rounds").select("*").eq("game_id", g.id).order("round_number", { ascending: false }).limit(1).maybeSingle(),
+          supabase
+            .from("rounds")
+            .select("*")
+            .eq("game_id", g.id)
+            .order("round_number", { ascending: false })
+            .limit(1)
+            .maybeSingle(),
         ]);
         if (cancelled) return;
         if (freshGame) setGame(freshGame as Game);
@@ -94,23 +100,47 @@ function GameRoom() {
 
       const channel = supabase
         .channel(`game-${g.id}`)
-        .on("postgres_changes", { event: "*", schema: "public", table: "games", filter: `id=eq.${g.id}` },
-          async () => { await loadState(); })
-        .on("postgres_changes", { event: "*", schema: "public", table: "players", filter: `game_id=eq.${g.id}` },
-          async () => { await loadState(); })
-        .on("postgres_changes", { event: "*", schema: "public", table: "rounds", filter: `game_id=eq.${g.id}` },
-          async () => { await loadState(); })
-        .on("postgres_changes", { event: "*", schema: "public", table: "actions" },
-          async () => { await loadState(); })
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "games", filter: `id=eq.${g.id}` },
+          async () => {
+            await loadState();
+          },
+        )
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "players", filter: `game_id=eq.${g.id}` },
+          async () => {
+            await loadState();
+          },
+        )
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "rounds", filter: `game_id=eq.${g.id}` },
+          async () => {
+            await loadState();
+          },
+        )
+        .on("postgres_changes", { event: "*", schema: "public", table: "actions" }, async () => {
+          await loadState();
+        })
         .subscribe((status) => {
           if (status === "SUBSCRIBED") void loadState();
         });
 
-      const pollId = window.setInterval(() => { void loadState(); }, 3500);
-      cleanup = () => { window.clearInterval(pollId); supabase.removeChannel(channel); };
+      const pollId = window.setInterval(() => {
+        void loadState();
+      }, 3500);
+      cleanup = () => {
+        window.clearInterval(pollId);
+        supabase.removeChannel(channel);
+      };
     })();
 
-    return () => { cancelled = true; cleanup?.(); };
+    return () => {
+      cancelled = true;
+      cleanup?.();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code]);
 
@@ -130,7 +160,10 @@ function GameRoom() {
   }, []);
 
   const isHost = game?.host_client_id === clientId;
-  const myPlayer = useMemo(() => players.find((p) => p.id === myPlayerId) ?? null, [players, myPlayerId]);
+  const myPlayer = useMemo(
+    () => players.find((p) => p.id === myPlayerId) ?? null,
+    [players, myPlayerId],
+  );
   const activePlayers = useMemo(
     () => players.filter((p) => p.status === "active" && p.chips > 0),
     [players],
@@ -156,7 +189,9 @@ function GameRoom() {
     if (!(allIn || timedOut)) return;
     if (settlingRef.current) return;
     settlingRef.current = true;
-    revealAndSettle().finally(() => { settlingRef.current = false; });
+    revealAndSettle().finally(() => {
+      settlingRef.current = false;
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allIn, timedOut, game?.id, round?.id, isHost]);
 
@@ -178,7 +213,13 @@ function GameRoom() {
     const deadline = new Date(Date.now() + g.round_seconds * 1000).toISOString();
     const { data: r } = await supabase
       .from("rounds")
-      .insert({ game_id: g.id, round_number: nextNum, status: "collecting", is_finale: isFinale, deadline })
+      .insert({
+        game_id: g.id,
+        round_number: nextNum,
+        status: "collecting",
+        is_finale: isFinale,
+        deadline,
+      })
       .select()
       .single();
     await supabase
@@ -212,11 +253,19 @@ function GameRoom() {
   async function revealAndSettle() {
     if (!game || !round) return;
     // Re-fetch fresh state
-    const { data: freshPlayersRaw } = await supabase.from("players").select("*").eq("game_id", game.id);
+    const { data: freshPlayersRaw } = await supabase
+      .from("players")
+      .select("*")
+      .eq("game_id", game.id);
     const freshPlayers = (freshPlayersRaw ?? []) as PlayerLite[];
-    const active = freshPlayers.filter((p) => p.status === "active" && p.chips >= 0 && (p.chips > 0 || true));
+    const active = freshPlayers.filter(
+      (p) => p.status === "active" && p.chips >= 0 && (p.chips > 0 || true),
+    );
     // Auto-action for missing players
-    const { data: freshActionsRaw } = await supabase.from("actions").select("*").eq("round_id", round.id);
+    const { data: freshActionsRaw } = await supabase
+      .from("actions")
+      .select("*")
+      .eq("round_id", round.id);
     const existing = new Set((freshActionsRaw ?? []).map((a: any) => a.player_id));
     const eligible = freshPlayers.filter((p) => p.status === "active" && p.chips > 0);
     for (const p of eligible) {
@@ -224,19 +273,33 @@ function GameRoom() {
       if (round.is_finale) {
         // honest by default
         await supabase.from("actions").insert({
-          round_id: round.id, player_id: p.id, is_thief: false, amount: 0, auto: true,
+          round_id: round.id,
+          player_id: p.id,
+          is_thief: false,
+          amount: 0,
+          auto: true,
         });
       } else {
         const minBet = Math.min(game.min_bet, p.chips);
         await supabase.from("actions").insert({
-          round_id: round.id, player_id: p.id, is_thief: false, amount: minBet, auto: true,
+          round_id: round.id,
+          player_id: p.id,
+          is_thief: false,
+          amount: minBet,
+          auto: true,
         });
       }
     }
     // Now deduct chips for all bettors (non-thief, non-finale) at reveal time
     if (!round.is_finale) {
-      const { data: allActions } = await supabase.from("actions").select("*").eq("round_id", round.id);
-      const { data: allPlayers } = await supabase.from("players").select("*").eq("game_id", game.id);
+      const { data: allActions } = await supabase
+        .from("actions")
+        .select("*")
+        .eq("round_id", round.id);
+      const { data: allPlayers } = await supabase
+        .from("players")
+        .select("*")
+        .eq("game_id", game.id);
       const pMap = new Map((allPlayers ?? []).map((p: any) => [p.id, p]));
       for (const a of (allActions ?? []) as any[]) {
         if (a.is_thief) continue;
@@ -244,7 +307,10 @@ function GameRoom() {
         if (!p) continue;
         const deduct = Math.min(a.amount, p.chips);
         if (deduct > 0) {
-          await supabase.from("players").update({ chips: p.chips - deduct }).eq("id", p.id);
+          await supabase
+            .from("players")
+            .update({ chips: p.chips - deduct })
+            .eq("id", p.id);
         }
       }
     }
@@ -262,7 +328,10 @@ function GameRoom() {
     let result;
     if (round.is_finale) {
       const finalists = playersForSettle.filter((p) => p.status === "active");
-      result = settleFinaleRound(finalists, actionsForSettle.filter((a) => finalists.some((p) => p.id === a.player_id)));
+      result = settleFinaleRound(
+        finalists,
+        actionsForSettle.filter((a) => finalists.some((p) => p.id === a.player_id)),
+      );
     } else {
       result = settleNormalRound(
         playersForSettle.filter((p) => p.status === "active"),
@@ -280,10 +349,13 @@ function GameRoom() {
     }
 
     const newPot = (game.banker_pot ?? 0) + result.bankerPotDelta;
-    await supabase.from("games").update({
-      banker_pot: newPot,
-      last_summary: { lines: result.summaryLines, round: round.round_number },
-    }).eq("id", game.id);
+    await supabase
+      .from("games")
+      .update({
+        banker_pot: newPot,
+        last_summary: { lines: result.summaryLines, round: round.round_number },
+      })
+      .eq("id", game.id);
 
     await supabase.from("rounds").update({ status: "settled" }).eq("id", round.id);
 
@@ -315,13 +387,7 @@ function GameRoom() {
       <div className="mx-auto max-w-6xl">
         <Header code={code} game={game} onLeave={leaveLobby} canLeave={game.status === "lobby"} />
 
-        {game.status === "lobby" && (
-          <Lobby
-            players={players}
-            isHost={isHost}
-            onStart={startGame}
-          />
-        )}
+        {game.status === "lobby" && <Lobby players={players} isHost={isHost} onStart={startGame} />}
 
         {(game.status === "playing" || game.status === "finale") && round && (
           <PlayingView
@@ -346,15 +412,33 @@ function GameRoom() {
 
 /* ========= subcomponents ========= */
 
-function Header({ code, game, onLeave, canLeave }: { code: string; game: Game; onLeave: () => void; canLeave: boolean }) {
+function Header({
+  code,
+  game,
+  onLeave,
+  canLeave,
+}: {
+  code: string;
+  game: Game;
+  onLeave: () => void;
+  canLeave: boolean;
+}) {
   const [copied, setCopied] = useState(false);
   return (
     <header className="mb-3 flex items-center justify-between gap-2 rounded-xl border border-border bg-card/40 px-3 py-2 backdrop-blur sm:mb-6 sm:rounded-2xl sm:px-5 sm:py-3">
-      <Link to="/" className="text-xs text-muted-foreground hover:text-foreground sm:text-sm">← Domů</Link>
+      <Link to="/" className="text-xs text-muted-foreground hover:text-foreground sm:text-sm">
+        ← Domů
+      </Link>
       <div className="flex items-center gap-2 sm:gap-3">
-        <span className="hidden text-xs uppercase tracking-widest text-muted-foreground sm:inline">Kód</span>
+        <span className="hidden text-xs uppercase tracking-widest text-muted-foreground sm:inline">
+          Kód
+        </span>
         <button
-          onClick={() => { navigator.clipboard?.writeText(code); setCopied(true); setTimeout(() => setCopied(false), 1500); }}
+          onClick={() => {
+            navigator.clipboard?.writeText(code);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 1500);
+          }}
           className="rounded-md border border-border bg-background/50 px-2 py-1 font-mono text-lg font-bold tracking-[0.2em] text-neon-mint hover:bg-background/80 sm:rounded-lg sm:px-3 sm:py-1.5 sm:text-2xl sm:tracking-[0.3em]"
           title="Kopírovat kód"
         >
@@ -363,23 +447,41 @@ function Header({ code, game, onLeave, canLeave }: { code: string; game: Game; o
         {copied && <span className="text-xs text-neon-mint">Zkopírováno!</span>}
       </div>
       <div className="flex items-center gap-2 sm:gap-3">
-        <span className="hidden text-sm text-muted-foreground md:inline">Bank: <b className="text-neon-cyan">{game.banker_pot}</b></span>
+        <span className="hidden text-sm text-muted-foreground md:inline">
+          Bank: <b className="text-neon-cyan">{game.banker_pot}</b>
+        </span>
         {canLeave && (
-          <button onClick={onLeave} className="text-xs text-muted-foreground hover:text-destructive">Odejít</button>
+          <button
+            onClick={onLeave}
+            className="text-xs text-muted-foreground hover:text-destructive"
+          >
+            Odejít
+          </button>
         )}
       </div>
     </header>
   );
 }
 
-function Lobby({ players, isHost, onStart }: { players: PlayerLite[]; isHost: boolean; onStart: () => void }) {
+function Lobby({
+  players,
+  isHost,
+  onStart,
+}: {
+  players: PlayerLite[];
+  isHost: boolean;
+  onStart: () => void;
+}) {
   return (
     <div className="grid gap-6 md:grid-cols-[1fr_320px]">
       <div className="bg-gradient-card rounded-2xl border border-border p-6 shadow-card">
         <h2 className="text-xl font-bold">Hráči ({players.length}/8)</h2>
         <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
           {players.map((p) => (
-            <li key={p.id} className="float-in flex items-center gap-3 rounded-xl border border-border bg-background/40 px-3 py-2">
+            <li
+              key={p.id}
+              className="float-in flex items-center gap-3 rounded-xl border border-border bg-background/40 px-3 py-2"
+            >
               <div className="bg-gradient-primary flex h-9 w-9 items-center justify-center rounded-full font-bold text-primary-foreground">
                 {p.name.slice(0, 1).toUpperCase()}
               </div>
@@ -415,7 +517,16 @@ function Lobby({ players, isHost, onStart }: { players: PlayerLite[]; isHost: bo
 }
 
 function PlayingView({
-  game, round, players, actions, myPlayer, myAction, secondsLeft, submittedCount, expectedCount, onSubmit,
+  game,
+  round,
+  players,
+  actions,
+  myPlayer,
+  myAction,
+  secondsLeft,
+  submittedCount,
+  expectedCount,
+  onSubmit,
 }: {
   game: Game;
   round: Round;
@@ -447,23 +558,33 @@ function PlayingView({
         </div>
         <div className="flex items-center gap-3 sm:gap-6">
           <div className="text-center">
-            <div className="text-[10px] uppercase tracking-widest text-muted-foreground sm:text-xs">Hotovo</div>
-            <div className="text-base font-bold text-neon-mint sm:text-xl">{submittedCount}/{expectedCount}</div>
+            <div className="text-[10px] uppercase tracking-widest text-muted-foreground sm:text-xs">
+              Hotovo
+            </div>
+            <div className="text-base font-bold text-neon-mint sm:text-xl">
+              {submittedCount}/{expectedCount}
+            </div>
           </div>
           {round.status === "collecting" && submittedCount < expectedCount && (
             <div className="text-center">
-              <div className="text-[10px] uppercase tracking-widest text-muted-foreground sm:text-xs">Čas</div>
-              <div className={`text-xl font-black tabular-nums sm:text-3xl ${secondsLeft <= 10 ? "text-destructive" : "text-neon-cyan"}`}>
+              <div className="text-[10px] uppercase tracking-widest text-muted-foreground sm:text-xs">
+                Čas
+              </div>
+              <div
+                className={`text-xl font-black tabular-nums sm:text-3xl ${secondsLeft <= 10 ? "text-destructive" : "text-neon-cyan"}`}
+              >
                 {secondsLeft}s
               </div>
             </div>
           )}
-          {round.status === "collecting" && submittedCount >= expectedCount && expectedCount > 0 && (
-            <div className="text-center">
-              <div className="text-xs uppercase tracking-widest text-muted-foreground">Stav</div>
-              <div className="text-xl font-black text-neon-mint">Odhalujeme…</div>
-            </div>
-          )}
+          {round.status === "collecting" &&
+            submittedCount >= expectedCount &&
+            expectedCount > 0 && (
+              <div className="text-center">
+                <div className="text-xs uppercase tracking-widest text-muted-foreground">Stav</div>
+                <div className="text-xl font-black text-neon-mint">Odhalujeme…</div>
+              </div>
+            )}
         </div>
       </div>
 
@@ -486,13 +607,13 @@ function PlayingView({
       </div>
 
       {/* Action panel */}
-      {myPlayer && myPlayer.status === "active" && myPlayer.chips > 0 && round.status === "collecting" && !myAction && (
-        <ActionPanel
-          chips={myPlayer.chips}
-          isFinale={round.is_finale}
-          onSubmit={onSubmit}
-        />
-      )}
+      {myPlayer &&
+        myPlayer.status === "active" &&
+        myPlayer.chips > 0 &&
+        round.status === "collecting" &&
+        !myAction && (
+          <ActionPanel chips={myPlayer.chips} isFinale={round.is_finale} onSubmit={onSubmit} />
+        )}
 
       {myPlayer && myAction && round.status === "collecting" && (
         <div className="bg-gradient-card rounded-2xl border border-border p-6 text-center shadow-card">
@@ -503,12 +624,17 @@ function PlayingView({
         </div>
       )}
 
-      {myPlayer && (myPlayer.status !== "active" || myPlayer.chips <= 0) && round.status === "collecting" && (
-        <div className="rounded-2xl border border-border bg-card/40 p-6 text-center text-muted-foreground">
-          {myPlayer.status === "fled" ? `🦝 Utekl jsi s ${myPlayer.fled_with} žetony.` :
-           myPlayer.status === "busted" ? "💀 Tvá hra skončila." : "Sleduj, jak to dopadne…"}
-        </div>
-      )}
+      {myPlayer &&
+        (myPlayer.status !== "active" || myPlayer.chips <= 0) &&
+        round.status === "collecting" && (
+          <div className="rounded-2xl border border-border bg-card/40 p-6 text-center text-muted-foreground">
+            {myPlayer.status === "fled"
+              ? `🦝 Utekl jsi s ${myPlayer.fled_with} žetony.`
+              : myPlayer.status === "busted"
+                ? "💀 Tvá hra skončila."
+                : "Sleduj, jak to dopadne…"}
+          </div>
+        )}
 
       {/* Summary */}
       {showSummary && (
@@ -523,7 +649,11 @@ function PlayingView({
 }
 
 function PlayerCard({
-  player, action, roundStatus, isFinale, isMe,
+  player,
+  action,
+  roundStatus,
+  isFinale,
+  isMe,
 }: {
   player: PlayerLite;
   action: ActionLite | undefined;
@@ -537,24 +667,32 @@ function PlayerCard({
   const submitted = !!action;
 
   return (
-    <div className={`bg-gradient-card rounded-lg border ${isMe ? "border-primary shadow-neon" : "border-border"} p-2 shadow-card transition sm:rounded-xl sm:p-3`}>
+    <div
+      className={`bg-gradient-card rounded-lg border ${isMe ? "border-primary shadow-neon" : "border-border"} p-2 shadow-card transition sm:rounded-xl sm:p-3`}
+    >
       <div className="flex items-center justify-between">
         <div className="flex min-w-0 items-center gap-1.5 sm:gap-2">
           <div className="bg-gradient-primary flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold text-primary-foreground sm:h-8 sm:w-8 sm:text-sm">
             {player.name.slice(0, 1).toUpperCase()}
           </div>
           <div className="min-w-0">
-            <div className="truncate text-xs font-bold sm:text-sm">{player.name}{isMe && <span className="ml-1 text-[9px] text-neon-mint sm:text-[10px]">(ty)</span>}</div>
+            <div className="truncate text-xs font-bold sm:text-sm">
+              {player.name}
+              {isMe && <span className="ml-1 text-[9px] text-neon-mint sm:text-[10px]">(ty)</span>}
+            </div>
             <div className="truncate text-[10px] text-muted-foreground sm:text-xs">
               {player.status === "fled" && `🦝 utekl s ${player.fled_with}`}
               {player.status === "busted" && "💀 vypadl"}
-              {player.status === "active" && (player.chips > 0 ? `${player.chips} žetonů` : "all-in")}
+              {player.status === "active" &&
+                (player.chips > 0 ? `${player.chips} žetonů` : "all-in")}
             </div>
           </div>
         </div>
         {!isOut && (
           <div className="text-right">
-            <div className="text-base font-black tabular-nums text-neon-cyan sm:text-xl">{player.chips}</div>
+            <div className="text-base font-black tabular-nums text-neon-cyan sm:text-xl">
+              {player.chips}
+            </div>
           </div>
         )}
       </div>
@@ -562,9 +700,13 @@ function PlayerCard({
       {/* Card / chips area */}
       <div className="mt-1.5 flex h-14 items-center justify-center sm:mt-3 sm:h-24">
         {isOut ? (
-          <div className="text-[10px] uppercase tracking-widest text-muted-foreground sm:text-xs">mimo hru</div>
+          <div className="text-[10px] uppercase tracking-widest text-muted-foreground sm:text-xs">
+            mimo hru
+          </div>
         ) : !submitted ? (
-          <div className="animate-pulse text-[10px] uppercase tracking-widest text-muted-foreground sm:text-xs">přemýšlí…</div>
+          <div className="animate-pulse text-[10px] uppercase tracking-widest text-muted-foreground sm:text-xs">
+            přemýšlí…
+          </div>
         ) : (
           <div className="flex items-center gap-1.5 sm:gap-2">
             {/* Card flip */}
@@ -576,13 +718,25 @@ function PlayerCard({
                 <div className="flip-face flip-back absolute inset-0 flex flex-col items-center justify-center rounded-lg border border-border bg-background">
                   {action!.is_thief ? (
                     <>
-                      <img src={thiefImg} alt="Zloděj" width={64} height={64} className="h-6 w-6 sm:h-10 sm:w-10" />
-                      <div className="mt-0.5 text-[7px] font-bold text-thief sm:text-[10px]">ZLODĚJ</div>
+                      <img
+                        src={thiefImg}
+                        alt="Zloděj"
+                        width={64}
+                        height={64}
+                        className="h-6 w-6 sm:h-10 sm:w-10"
+                      />
+                      <div className="mt-0.5 text-[7px] font-bold text-thief sm:text-[10px]">
+                        ZLODĚJ
+                      </div>
                     </>
                   ) : (
                     <>
-                      <div className="text-sm font-black text-neon-cyan sm:text-xl">{action!.amount}</div>
-                      <div className="mt-0.5 text-[7px] uppercase tracking-widest text-muted-foreground sm:text-[9px]">vklad</div>
+                      <div className="text-sm font-black text-neon-cyan sm:text-xl">
+                        {action!.amount}
+                      </div>
+                      <div className="mt-0.5 text-[7px] uppercase tracking-widest text-muted-foreground sm:text-[9px]">
+                        vklad
+                      </div>
                     </>
                   )}
                 </div>
@@ -614,13 +768,17 @@ function ChipStack({ amount }: { amount: number }) {
           style={{ bottom: `${i * 5}px` }}
         />
       ))}
-      <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 text-[10px] font-bold text-neon-mint">{amount}</div>
+      <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 text-[10px] font-bold text-neon-mint">
+        {amount}
+      </div>
     </div>
   );
 }
 
 function ActionPanel({
-  chips, isFinale, onSubmit,
+  chips,
+  isFinale,
+  onSubmit,
 }: {
   chips: number;
   isFinale: boolean;
@@ -634,8 +792,12 @@ function ActionPanel({
   };
   const lock = submitting;
   return (
-    <div className={`bg-gradient-card rounded-xl border border-border p-3 shadow-card sm:rounded-2xl sm:p-6 ${lock ? "opacity-70" : ""}`}>
-      <h3 className="text-base font-bold sm:text-lg">{isFinale ? "Finále — poslední rozhodnutí" : "Tvoje volba"}</h3>
+    <div
+      className={`bg-gradient-card rounded-xl border border-border p-3 shadow-card sm:rounded-2xl sm:p-6 ${lock ? "opacity-70" : ""}`}
+    >
+      <h3 className="text-base font-bold sm:text-lg">
+        {isFinale ? "Finále — poslední rozhodnutí" : "Tvoje volba"}
+      </h3>
       <p className="mt-0.5 text-xs text-muted-foreground sm:mt-1 sm:text-sm">
         {isFinale
           ? "Buď čestný a riskuj rozdělení banku, nebo zraď a vezmi vše."
@@ -644,7 +806,9 @@ function ActionPanel({
 
       {!isFinale && (
         <div className="mt-3 sm:mt-5">
-          <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground sm:mb-2 sm:text-xs">Vklady</div>
+          <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground sm:mb-2 sm:text-xs">
+            Vklady
+          </div>
           <div className="flex flex-wrap gap-1.5 sm:gap-2">
             {BET_OPTIONS.map((opt) => {
               const disabled = opt > chips || lock;
@@ -655,7 +819,13 @@ function ActionPanel({
                   onClick={() => handle({ isThief: false, amount: opt })}
                   className="group relative flex h-11 w-11 flex-col items-center justify-center rounded-full border-2 border-primary/60 bg-background/60 text-sm font-bold text-neon-cyan transition hover:border-primary hover:shadow-neon disabled:cursor-not-allowed disabled:opacity-30 sm:h-16 sm:w-16 sm:text-base"
                 >
-                  <img src={chipImg} alt="" width={48} height={48} className="absolute inset-0 m-auto h-8 w-8 opacity-40 group-hover:opacity-70 sm:h-12 sm:w-12" />
+                  <img
+                    src={chipImg}
+                    alt=""
+                    width={48}
+                    height={48}
+                    className="absolute inset-0 m-auto h-8 w-8 opacity-40 group-hover:opacity-70 sm:h-12 sm:w-12"
+                  />
                   <span className="relative">{opt}</span>
                 </button>
               );
@@ -665,8 +835,16 @@ function ActionPanel({
               onClick={() => handle({ isThief: false, amount: chips })}
               className="group relative flex h-11 w-11 flex-col items-center justify-center rounded-full border-2 border-primary/60 bg-background/60 text-center font-black text-neon-cyan transition hover:border-primary hover:shadow-neon disabled:cursor-not-allowed disabled:opacity-30 sm:h-16 sm:w-16"
             >
-              <img src={chipImg} alt="" width={48} height={48} className="absolute inset-0 m-auto h-8 w-8 opacity-40 group-hover:opacity-70 sm:h-12 sm:w-12" />
-              <span className="relative text-[0.55rem] uppercase leading-none sm:text-[0.68rem]">All-in</span>
+              <img
+                src={chipImg}
+                alt=""
+                width={48}
+                height={48}
+                className="absolute inset-0 m-auto h-8 w-8 opacity-40 group-hover:opacity-70 sm:h-12 sm:w-12"
+              />
+              <span className="relative text-[0.55rem] uppercase leading-none sm:text-[0.68rem]">
+                All-in
+              </span>
               <span className="relative mt-0.5 text-[10px] leading-none sm:text-xs">{chips}</span>
             </button>
           </div>
@@ -711,8 +889,13 @@ function FinishedView({ players }: { players: PlayerLite[] }) {
       <h2 className="mt-4 text-3xl font-black">Konec hry</h2>
       <ol className="mx-auto mt-6 max-w-md space-y-2 text-left">
         {ranked.map((p, i) => (
-          <li key={p.id} className="flex items-center justify-between rounded-lg border border-border bg-background/40 px-4 py-2">
-            <span><b>{i + 1}.</b> {p.name}</span>
+          <li
+            key={p.id}
+            className="flex items-center justify-between rounded-lg border border-border bg-background/40 px-4 py-2"
+          >
+            <span>
+              <b>{i + 1}.</b> {p.name}
+            </span>
             <span className="font-bold text-neon-cyan">
               {p.fled_with || p.chips} žetonů
               {p.status === "fled" && " 🦝"}
@@ -721,7 +904,10 @@ function FinishedView({ players }: { players: PlayerLite[] }) {
           </li>
         ))}
       </ol>
-      <Link to="/" className="bg-gradient-primary shadow-neon mt-8 inline-block rounded-lg px-6 py-3 font-bold uppercase tracking-wider text-primary-foreground">
+      <Link
+        to="/"
+        className="bg-gradient-primary shadow-neon mt-8 inline-block rounded-lg px-6 py-3 font-bold uppercase tracking-wider text-primary-foreground"
+      >
         Nová hra
       </Link>
     </div>
@@ -736,7 +922,15 @@ function CenterMessage({ children }: { children: React.ReactNode }) {
   );
 }
 
-function SummaryPanel({ lines, pauseSeconds, roundId }: { lines: string[]; pauseSeconds: number; roundId: string }) {
+function SummaryPanel({
+  lines,
+  pauseSeconds,
+  roundId,
+}: {
+  lines: string[];
+  pauseSeconds: number;
+  roundId: string;
+}) {
   // Začni odpočet ve chvíli, kdy se objeví summary pro toto kolo
   const [startedAt, setStartedAt] = useState<number>(() => Date.now());
   const [now, setNow] = useState<number>(() => Date.now());
@@ -758,11 +952,16 @@ function SummaryPanel({ lines, pauseSeconds, roundId }: { lines: string[]; pause
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h3 className="text-lg font-bold text-accent">Vypořádání kola</h3>
         <div className="text-xs uppercase tracking-widest text-muted-foreground">
-          Další kolo začne za <span className="ml-1 text-base font-black tabular-nums text-neon-cyan">{remaining}s</span>
+          Další kolo začne za{" "}
+          <span className="ml-1 text-base font-black tabular-nums text-neon-cyan">
+            {remaining}s
+          </span>
         </div>
       </div>
       <ul className="mt-3 space-y-1 text-sm">
-        {lines.map((l, i) => <li key={i}>{l}</li>)}
+        {lines.map((l, i) => (
+          <li key={i}>{l}</li>
+        ))}
       </ul>
     </div>
   );
