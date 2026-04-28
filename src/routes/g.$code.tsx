@@ -537,15 +537,15 @@ function PlayerCard({
   const submitted = !!action;
 
   return (
-    <div className={`bg-gradient-card rounded-xl border ${isMe ? "border-primary shadow-neon" : "border-border"} p-3 shadow-card transition`}>
+    <div className={`bg-gradient-card rounded-lg border ${isMe ? "border-primary shadow-neon" : "border-border"} p-2 shadow-card transition sm:rounded-xl sm:p-3`}>
       <div className="flex items-center justify-between">
-        <div className="flex min-w-0 items-center gap-2">
-          <div className="bg-gradient-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold text-primary-foreground">
+        <div className="flex min-w-0 items-center gap-1.5 sm:gap-2">
+          <div className="bg-gradient-primary flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold text-primary-foreground sm:h-8 sm:w-8 sm:text-sm">
             {player.name.slice(0, 1).toUpperCase()}
           </div>
           <div className="min-w-0">
-            <div className="truncate text-sm font-bold">{player.name}{isMe && <span className="ml-1 text-[10px] text-neon-mint">(ty)</span>}</div>
-            <div className="text-xs text-muted-foreground">
+            <div className="truncate text-xs font-bold sm:text-sm">{player.name}{isMe && <span className="ml-1 text-[9px] text-neon-mint sm:text-[10px]">(ty)</span>}</div>
+            <div className="truncate text-[10px] text-muted-foreground sm:text-xs">
               {player.status === "fled" && `🦝 utekl s ${player.fled_with}`}
               {player.status === "busted" && "💀 vypadl"}
               {player.status === "active" && (player.chips > 0 ? `${player.chips} žetonů` : "all-in")}
@@ -554,35 +554,35 @@ function PlayerCard({
         </div>
         {!isOut && (
           <div className="text-right">
-            <div className="text-xl font-black tabular-nums text-neon-cyan">{player.chips}</div>
+            <div className="text-base font-black tabular-nums text-neon-cyan sm:text-xl">{player.chips}</div>
           </div>
         )}
       </div>
 
       {/* Card / chips area */}
-      <div className="mt-3 flex h-24 items-center justify-center">
+      <div className="mt-1.5 flex h-14 items-center justify-center sm:mt-3 sm:h-24">
         {isOut ? (
-          <div className="text-xs uppercase tracking-widest text-muted-foreground">mimo hru</div>
+          <div className="text-[10px] uppercase tracking-widest text-muted-foreground sm:text-xs">mimo hru</div>
         ) : !submitted ? (
-          <div className="text-xs uppercase tracking-widest text-muted-foreground animate-pulse">přemýšlí…</div>
+          <div className="animate-pulse text-[10px] uppercase tracking-widest text-muted-foreground sm:text-xs">přemýšlí…</div>
         ) : (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             {/* Card flip */}
-            <div className="relative h-20 w-14 [perspective:800px]">
+            <div className="relative h-12 w-9 [perspective:800px] sm:h-20 sm:w-14">
               <div className={`flip-card relative h-full w-full ${revealed ? "flipped" : ""}`}>
                 <div className="flip-face bg-gradient-primary absolute inset-0 flex items-center justify-center rounded-lg border border-primary/60 shadow-neon">
-                  <div className="text-2xl">?</div>
+                  <div className="text-lg sm:text-2xl">?</div>
                 </div>
                 <div className="flip-face flip-back absolute inset-0 flex flex-col items-center justify-center rounded-lg border border-border bg-background">
                   {action!.is_thief ? (
                     <>
-                      <img src={thiefImg} alt="Zloděj" width={64} height={64} className="h-10 w-10" />
-                      <div className="mt-0.5 text-[10px] font-bold text-thief">ZLODĚJ</div>
+                      <img src={thiefImg} alt="Zloděj" width={64} height={64} className="h-6 w-6 sm:h-10 sm:w-10" />
+                      <div className="mt-0.5 text-[7px] font-bold text-thief sm:text-[10px]">ZLODĚJ</div>
                     </>
                   ) : (
                     <>
-                      <div className="text-xl font-black text-neon-cyan">{action!.amount}</div>
-                      <div className="mt-0.5 text-[9px] uppercase tracking-widest text-muted-foreground">vklad</div>
+                      <div className="text-sm font-black text-neon-cyan sm:text-xl">{action!.amount}</div>
+                      <div className="mt-0.5 text-[7px] uppercase tracking-widest text-muted-foreground sm:text-[9px]">vklad</div>
                     </>
                   )}
                 </div>
