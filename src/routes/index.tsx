@@ -116,6 +116,7 @@ function Home() {
             seat,
           });
           if (!pErr) joined = true;
+          else if (pErr.message.includes("players_game_id_client_id")) joined = true;
           else if (!pErr.message.toLowerCase().includes("duplicate")) throw pErr;
         }
         if (!joined) throw new Error("Nepodařilo se připojit, zkus to prosím znovu.");
