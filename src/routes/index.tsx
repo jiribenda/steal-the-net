@@ -23,7 +23,7 @@ function Home() {
   const [joinCode, setJoinCode] = useState("");
   const [startingChips, setStartingChips] = useState(50);
   const [roundSeconds, setRoundSeconds] = useState(60);
-  const [pauseSeconds, setPauseSeconds] = useState(15);
+  const [pauseSeconds, setPauseSeconds] = useState(25);
   const [busy, setBusy] = useState<null | "create" | "join">(null);
   const [error, setError] = useState<string | null>(null);
 
