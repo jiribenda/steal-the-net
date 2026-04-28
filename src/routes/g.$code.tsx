@@ -432,28 +432,28 @@ function PlayingView({
   const showSummary = round.status === "settled" && summary && summary.round === round.round_number;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3 sm:space-y-6">
       {/* Round bar */}
-      <div className="bg-gradient-card flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-border px-5 py-4 shadow-card">
+      <div className="bg-gradient-card flex items-center justify-between gap-2 rounded-xl border border-border px-3 py-2 shadow-card sm:flex-wrap sm:gap-4 sm:rounded-2xl sm:px-5 sm:py-4">
         <div>
-          <div className="text-xs uppercase tracking-widest text-muted-foreground">
+          <div className="text-[10px] uppercase tracking-widest text-muted-foreground sm:text-xs">
             {round.is_finale ? "Finále" : `Kolo ${round.round_number}`}
           </div>
-          <div className="mt-1 text-2xl font-black">
+          <div className="mt-0.5 text-lg font-black sm:mt-1 sm:text-2xl">
             {round.status === "collecting" && "Rozhodni se"}
             {round.status === "revealed" && "Odhalení!"}
             {round.status === "settled" && "Vypořádání"}
           </div>
         </div>
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-3 sm:gap-6">
           <div className="text-center">
-            <div className="text-xs uppercase tracking-widest text-muted-foreground">Hotovo</div>
-            <div className="text-xl font-bold text-neon-mint">{submittedCount}/{expectedCount}</div>
+            <div className="text-[10px] uppercase tracking-widest text-muted-foreground sm:text-xs">Hotovo</div>
+            <div className="text-base font-bold text-neon-mint sm:text-xl">{submittedCount}/{expectedCount}</div>
           </div>
           {round.status === "collecting" && submittedCount < expectedCount && (
             <div className="text-center">
-              <div className="text-xs uppercase tracking-widest text-muted-foreground">Čas</div>
-              <div className={`text-3xl font-black tabular-nums ${secondsLeft <= 10 ? "text-destructive" : "text-neon-cyan"}`}>
+              <div className="text-[10px] uppercase tracking-widest text-muted-foreground sm:text-xs">Čas</div>
+              <div className={`text-xl font-black tabular-nums sm:text-3xl ${secondsLeft <= 10 ? "text-destructive" : "text-neon-cyan"}`}>
                 {secondsLeft}s
               </div>
             </div>
@@ -468,7 +468,7 @@ function PlayingView({
       </div>
 
       {/* Players table */}
-      <div className="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-3 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-1.5 sm:gap-3 md:grid-cols-3 xl:grid-cols-4">
         {players.map((p) => {
           const a = actions.find((x) => x.player_id === p.id);
           const isMe = p.id === myPlayer?.id;
