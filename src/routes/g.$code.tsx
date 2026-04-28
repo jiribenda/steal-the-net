@@ -70,60 +70,44 @@ function GameRoom() {
     (async () => {
       const { data: g } = await supabase.from("games").select("*").eq("code", code).maybeSingle();
       if (!g || cancelled) return;
-      setGame(g as Game);
-
-      const { data: ps } = await supabase.from("players").select("*").eq("game_id", g.id).order("seat");
-      if (!cancelled) {
+      const loadState = async () => {
+        const [{ data: freshGame }, { data: ps }, { data: rs }] = await Promise.all([
+          supabase.from("games").select("*").eq("id", g.id).maybeSingle(),
+          supabase.from("players").select("*").eq("game_id", g.id).order("seat"),
+          supabase.from("rounds").select("*").eq("game_id", g.id).order("round_number", { ascending: false }).limit(1).maybeSingle(),
+        ]);
+        if (cancelled) return;
+        if (freshGame) setGame(freshGame as Game);
         setPlayers((ps ?? []) as PlayerLite[]);
         const mine = (ps ?? []).find((p: any) => p.client_id === clientId);
         setMyPlayerId(mine?.id ?? null);
-      }
-
-      const { data: rs } = await supabase
-        .from("rounds")
-        .select("*")
-        .eq("game_id", g.id)
-        .order("round_number", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-      if (!cancelled && rs) {
-        setRound(rs as Round);
-        const { data: as } = await supabase.from("actions").select("*").eq("round_id", rs.id);
-        if (!cancelled) setActions((as ?? []) as ActionLite[]);
-      }
+        if (rs) {
+          setRound(rs as Round);
+          const { data: as } = await supabase.from("actions").select("*").eq("round_id", rs.id);
+          if (!cancelled) setActions((as ?? []) as ActionLite[]);
+        } else {
+          setRound(null);
+          setActions([]);
+        }
+      };
+      await loadState();
 
       const channel = supabase
         .channel(`game-${g.id}`)
         .on("postgres_changes", { event: "*", schema: "public", table: "games", filter: `id=eq.${g.id}` },
-          (payload) => { if (payload.new) setGame(payload.new as Game); })
+          async () => { await loadState(); })
         .on("postgres_changes", { event: "*", schema: "public", table: "players", filter: `game_id=eq.${g.id}` },
-          async () => {
-            const { data } = await supabase.from("players").select("*").eq("game_id", g.id).order("seat");
-            setPlayers((data ?? []) as PlayerLite[]);
-            const mine = (data ?? []).find((p: any) => p.client_id === clientId);
-            setMyPlayerId(mine?.id ?? null);
-          })
+          async () => { await loadState(); })
         .on("postgres_changes", { event: "*", schema: "public", table: "rounds", filter: `game_id=eq.${g.id}` },
-          async (payload) => {
-            const r = payload.new as Round;
-            // Clear actions immediately so stale actions from prior round don't trigger auto-settle
-            setActions([]);
-            setRound(r);
-            const { data } = await supabase.from("actions").select("*").eq("round_id", r.id);
-            setActions((data ?? []) as ActionLite[]);
-          })
+          async () => { await loadState(); })
         .on("postgres_changes", { event: "*", schema: "public", table: "actions" },
-          async (payload) => {
-            // Closure-safe: refetch using round_id from the payload
-            const newRow: any = payload.new ?? payload.old;
-            const rid = newRow?.round_id;
-            if (!rid) return;
-            const { data } = await supabase.from("actions").select("*").eq("round_id", rid);
-            setActions((data ?? []) as ActionLite[]);
-          })
-        .subscribe();
+          async () => { await loadState(); })
+        .subscribe((status) => {
+          if (status === "SUBSCRIBED") void loadState();
+        });
 
-      cleanup = () => { supabase.removeChannel(channel); };
+      const pollId = window.setInterval(() => { void loadState(); }, 3500);
+      cleanup = () => { window.clearInterval(pollId); supabase.removeChannel(channel); };
     })();
 
     return () => { cancelled = true; cleanup?.(); };
