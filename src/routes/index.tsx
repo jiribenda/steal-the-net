@@ -132,13 +132,13 @@ function Home() {
     <main className="home-page min-h-screen px-6 py-12">
       <div className="mx-auto max-w-6xl">
         <header className="mb-10 text-center">
-          <div className="rounded-xl bg-brand-header px-6 py-8 text-brand-header-foreground shadow-card md:px-10 md:py-10">
+          <div className="bg-brand-header px-6 py-8 text-brand-header-foreground md:px-10 md:py-10">
             <h1 className="text-5xl font-black leading-tight tracking-tight md:text-7xl">
               Dilema
             </h1>
           </div>
-          <div className="mt-3 rounded-xl bg-card px-5 py-4 shadow-card md:px-8">
-            <p className="mx-auto max-w-4xl text-base leading-relaxed text-muted-foreground md:text-lg">
+          <div className="mt-4 px-2 md:px-8">
+            <p className="mx-auto max-w-4xl text-base leading-relaxed text-foreground md:text-lg">
               Přihazuj do banku a zdvojnásob svůj vklad — nebo se staň zlodějem a odejdi s lupem.
               Pozor na ostatní hráče: kdo krade, ne vždy přežije.{" "}
               <Link to="/pravidla" className="font-semibold text-primary underline-offset-4 hover:underline">
