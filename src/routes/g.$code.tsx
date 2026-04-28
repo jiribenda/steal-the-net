@@ -311,7 +311,7 @@ function GameRoom() {
 
   // ===== UI =====
   return (
-    <main className="min-h-screen px-4 py-6 md:px-8">
+    <main className="min-h-screen px-2 py-2 sm:px-4 sm:py-4 md:px-8 md:py-6">
       <div className="mx-auto max-w-6xl">
         <Header code={code} game={game} onLeave={leaveLobby} canLeave={game.status === "lobby"} />
 
@@ -349,20 +349,20 @@ function GameRoom() {
 function Header({ code, game, onLeave, canLeave }: { code: string; game: Game; onLeave: () => void; canLeave: boolean }) {
   const [copied, setCopied] = useState(false);
   return (
-    <header className="mb-6 flex items-center justify-between gap-4 rounded-2xl border border-border bg-card/40 px-5 py-3 backdrop-blur">
-      <Link to="/" className="text-sm text-muted-foreground hover:text-foreground">← Domů</Link>
-      <div className="flex items-center gap-3">
-        <span className="text-xs uppercase tracking-widest text-muted-foreground">Kód</span>
+    <header className="mb-3 flex items-center justify-between gap-2 rounded-xl border border-border bg-card/40 px-3 py-2 backdrop-blur sm:mb-6 sm:rounded-2xl sm:px-5 sm:py-3">
+      <Link to="/" className="text-xs text-muted-foreground hover:text-foreground sm:text-sm">← Domů</Link>
+      <div className="flex items-center gap-2 sm:gap-3">
+        <span className="hidden text-xs uppercase tracking-widest text-muted-foreground sm:inline">Kód</span>
         <button
           onClick={() => { navigator.clipboard?.writeText(code); setCopied(true); setTimeout(() => setCopied(false), 1500); }}
-          className="rounded-lg border border-border bg-background/50 px-3 py-1.5 font-mono text-2xl font-bold tracking-[0.3em] text-neon-mint hover:bg-background/80"
+          className="rounded-md border border-border bg-background/50 px-2 py-1 font-mono text-lg font-bold tracking-[0.2em] text-neon-mint hover:bg-background/80 sm:rounded-lg sm:px-3 sm:py-1.5 sm:text-2xl sm:tracking-[0.3em]"
           title="Kopírovat kód"
         >
           {code}
         </button>
         {copied && <span className="text-xs text-neon-mint">Zkopírováno!</span>}
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
         <span className="hidden text-sm text-muted-foreground md:inline">Bank: <b className="text-neon-cyan">{game.banker_pot}</b></span>
         {canLeave && (
           <button onClick={onLeave} className="text-xs text-muted-foreground hover:text-destructive">Odejít</button>
