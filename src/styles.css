@@ -35,6 +35,7 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-ring-offset-background: var(--background);
+  --color-brand-header-foreground: var(--brand-header-foreground);
 }
 
 :root {
@@ -75,6 +76,7 @@
   --input: oklch(0.89 0.018 246);
   --ring: oklch(0.43 0.145 253);
   --brand-header: rgb(22 123 232);
+  --brand-header-foreground: oklch(0.99 0.006 245);
 
   /* Brand */
   --neon-cyan: oklch(0.43 0.145 253);
@@ -140,6 +142,11 @@
     z-index: -1;
     height: 11.875rem;
     background: var(--brand-header);
+  }
+  @media (max-width: 639px) {
+    .home-page::before {
+      height: 17.5rem;
+    }
   }
 
   .glow-pulse {

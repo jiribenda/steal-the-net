@@ -127,10 +127,10 @@ function Home() {
           <h1 className="px-4 py-2 text-5xl font-black leading-[1.15] tracking-tight text-white md:text-7xl drop-shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
             Dilema
           </h1>
-          <p className="mt-4 max-w-3xl text-lg text-muted-foreground">
+          <p className="mt-4 max-w-3xl text-lg text-brand-header-foreground/90">
             Přihazuj do banku a zdvojnásob svůj vklad — nebo se staň zlodějem a odejdi s lupem.
             Pozor na ostatní hráče: kdo krade, ne vždy přežije.{" "}
-            <Link to="/pravidla" className="font-semibold text-primary underline-offset-4 hover:underline">
+            <Link to="/pravidla" className="font-semibold text-brand-header-foreground underline-offset-4 hover:underline">
               Úplná pravidla zde
             </Link>
           .
@@ -155,7 +155,7 @@ function Home() {
                   className="w-full rounded-lg border border-input bg-input/40 px-4 py-3 outline-none ring-primary focus:ring-2"
                 />
               </Field>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid gap-3 sm:grid-cols-2">
                 <Field label="Počáteční žetony">
                   <NumberField
                     value={startingChips}
