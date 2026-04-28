@@ -131,21 +131,22 @@ function Home() {
   return (
     <main className="home-page min-h-screen px-6 py-12">
       <div className="mx-auto max-w-6xl">
-        <header className="mb-12 flex flex-col items-center text-center">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-card/40 px-3 py-1 text-xs font-medium uppercase tracking-widest text-neon-mint">
-            Online · 2–8 hráčů · Realtime
+        <header className="mb-10 text-center">
+          <div className="rounded-xl bg-brand-header px-6 py-8 text-brand-header-foreground shadow-card md:px-10 md:py-10">
+            <h1 className="text-5xl font-black leading-tight tracking-tight md:text-7xl">
+              Dilema
+            </h1>
           </div>
-          <h1 className="px-4 py-2 text-5xl font-black leading-[1.15] tracking-tight text-white md:text-7xl drop-shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
-            Dilema
-          </h1>
-          <p className="mt-4 max-w-3xl text-lg text-brand-header-foreground/90">
-            Přihazuj do banku a zdvojnásob svůj vklad — nebo se staň zlodějem a odejdi s lupem.
-            Pozor na ostatní hráče: kdo krade, ne vždy přežije.{" "}
-            <Link to="/pravidla" className="font-semibold text-brand-header-foreground underline-offset-4 hover:underline">
-              Úplná pravidla zde
-            </Link>
-          .
-          </p>
+          <div className="mt-3 rounded-xl bg-card px-5 py-4 shadow-card md:px-8">
+            <p className="mx-auto max-w-4xl text-base leading-relaxed text-muted-foreground md:text-lg">
+              Přihazuj do banku a zdvojnásob svůj vklad — nebo se staň zlodějem a odejdi s lupem.
+              Pozor na ostatní hráče: kdo krade, ne vždy přežije.{" "}
+              <Link to="/pravidla" className="font-semibold text-primary underline-offset-4 hover:underline">
+                Úplná pravidla zde
+              </Link>
+              .
+            </p>
+          </div>
         </header>
 
         <div className="grid gap-6 md:grid-cols-2">
