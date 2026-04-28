@@ -98,17 +98,27 @@ function Home() {
         .maybeSingle();
 
       if (!existing) {
-        const { count } = await supabase
-          .from("players").select("*", { count: "exact", head: true }).eq("game_id", game.id);
-        if ((count ?? 0) >= 8) throw new Error("Plná místnost (max 8)");
-        const { error: pErr } = await supabase.from("players").insert({
-          game_id: game.id,
-          client_id: clientId,
-          name: name.trim().slice(0, 20),
-          chips: game.starting_chips,
-          seat: (count ?? 0) + 1,
-        });
-        if (pErr) throw pErr;
+        let joined = false;
+        for (let attempt = 0; attempt < 3 && !joined; attempt++) {
+          const { data: seatedPlayers } = await supabase
+            .from("players")
+            .select("seat")
+            .eq("game_id", game.id)
+            .order("seat");
+          if ((seatedPlayers?.length ?? 0) >= 8) throw new Error("Plná místnost (max 8)");
+          const usedSeats = new Set((seatedPlayers ?? []).map((p) => p.seat));
+          const seat = Array.from({ length: 8 }, (_, i) => i + 1).find((n) => !usedSeats.has(n)) ?? 1;
+          const { error: pErr } = await supabase.from("players").insert({
+            game_id: game.id,
+            client_id: clientId,
+            name: name.trim().slice(0, 20),
+            chips: game.starting_chips,
+            seat,
+          });
+          if (!pErr) joined = true;
+          else if (!pErr.message.toLowerCase().includes("duplicate")) throw pErr;
+        }
+        if (!joined) throw new Error("Nepodařilo se připojit, zkus to prosím znovu.");
       }
       navigate({ to: "/g/$code", params: { code } });
     } catch (e) {
