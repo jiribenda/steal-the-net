@@ -35,6 +35,7 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-ring-offset-background: var(--background);
+  --color-brand-header: var(--brand-header);
   --color-brand-header-foreground: var(--brand-header-foreground);
 }
 
@@ -130,24 +131,6 @@
   .text-neon-mint      { color: var(--neon-mint); }
   .text-neon-violet    { color: var(--neon-violet); }
   .text-neon-pink      { color: var(--neon-pink); }
-
-  .home-page {
-    position: relative;
-    isolation: isolate;
-  }
-  .home-page::before {
-    content: "";
-    position: absolute;
-    inset: 0 0 auto;
-    z-index: -1;
-    height: 11.875rem;
-    background: var(--brand-header);
-  }
-  @media (max-width: 639px) {
-    .home-page::before {
-      height: 17.5rem;
-    }
-  }
 
   .glow-pulse {
     animation: glow-pulse 2s ease-in-out infinite;
