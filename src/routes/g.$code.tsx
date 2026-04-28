@@ -484,7 +484,7 @@ function PlayingView({
       </div>
 
       {/* Players table */}
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-3 xl:grid-cols-4">
         {players.map((p) => {
           const a = actions.find((x) => x.player_id === p.id);
           const isMe = p.id === myPlayer?.id;
@@ -553,14 +553,14 @@ function PlayerCard({
   const submitted = !!action;
 
   return (
-    <div className={`bg-gradient-card rounded-2xl border ${isMe ? "border-primary shadow-neon" : "border-border"} p-4 shadow-card transition`}>
+    <div className={`bg-gradient-card rounded-xl border ${isMe ? "border-primary shadow-neon" : "border-border"} p-3 shadow-card transition`}>
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="bg-gradient-primary flex h-10 w-10 items-center justify-center rounded-full font-bold text-primary-foreground">
+        <div className="flex min-w-0 items-center gap-2">
+          <div className="bg-gradient-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold text-primary-foreground">
             {player.name.slice(0, 1).toUpperCase()}
           </div>
-          <div>
-            <div className="font-bold">{player.name}{isMe && <span className="ml-1 text-xs text-neon-mint">(ty)</span>}</div>
+          <div className="min-w-0">
+            <div className="truncate text-sm font-bold">{player.name}{isMe && <span className="ml-1 text-[10px] text-neon-mint">(ty)</span>}</div>
             <div className="text-xs text-muted-foreground">
               {player.status === "fled" && `🦝 utekl s ${player.fled_with}`}
               {player.status === "busted" && "💀 vypadl"}
@@ -570,35 +570,35 @@ function PlayerCard({
         </div>
         {!isOut && (
           <div className="text-right">
-            <div className="text-2xl font-black tabular-nums text-neon-cyan">{player.chips}</div>
+            <div className="text-xl font-black tabular-nums text-neon-cyan">{player.chips}</div>
           </div>
         )}
       </div>
 
       {/* Card / chips area */}
-      <div className="mt-4 flex h-32 items-center justify-center">
+      <div className="mt-3 flex h-24 items-center justify-center">
         {isOut ? (
           <div className="text-xs uppercase tracking-widest text-muted-foreground">mimo hru</div>
         ) : !submitted ? (
           <div className="text-xs uppercase tracking-widest text-muted-foreground animate-pulse">přemýšlí…</div>
         ) : (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             {/* Card flip */}
-            <div className="relative h-28 w-20 [perspective:800px]">
+            <div className="relative h-20 w-14 [perspective:800px]">
               <div className={`flip-card relative h-full w-full ${revealed ? "flipped" : ""}`}>
                 <div className="flip-face bg-gradient-primary absolute inset-0 flex items-center justify-center rounded-lg border border-primary/60 shadow-neon">
-                  <div className="text-3xl">?</div>
+                  <div className="text-2xl">?</div>
                 </div>
                 <div className="flip-face flip-back absolute inset-0 flex flex-col items-center justify-center rounded-lg border border-border bg-background">
                   {action!.is_thief ? (
                     <>
-                      <img src={thiefImg} alt="Zloděj" width={64} height={64} className="h-14 w-14" />
-                      <div className="mt-1 text-xs font-bold text-thief">ZLODĚJ</div>
+                      <img src={thiefImg} alt="Zloděj" width={64} height={64} className="h-10 w-10" />
+                      <div className="mt-0.5 text-[10px] font-bold text-thief">ZLODĚJ</div>
                     </>
                   ) : (
                     <>
-                      <div className="text-2xl font-black text-neon-cyan">{action!.amount}</div>
-                      <div className="mt-1 text-[10px] uppercase tracking-widest text-muted-foreground">vklad</div>
+                      <div className="text-xl font-black text-neon-cyan">{action!.amount}</div>
+                      <div className="mt-0.5 text-[9px] uppercase tracking-widest text-muted-foreground">vklad</div>
                     </>
                   )}
                 </div>
