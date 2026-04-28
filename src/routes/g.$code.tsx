@@ -616,9 +616,9 @@ function PlayerCard({
 }
 
 function ChipStack({ amount }: { amount: number }) {
-  const count = Math.min(8, Math.max(1, Math.round(Math.log2(amount + 1))));
+  const count = Math.min(6, Math.max(1, Math.round(Math.log2(amount + 1))));
   return (
-    <div className="relative h-24 w-12">
+    <div className="relative h-18 w-9">
       {Array.from({ length: count }).map((_, i) => (
         <img
           key={i}
@@ -626,11 +626,11 @@ function ChipStack({ amount }: { amount: number }) {
           alt=""
           width={48}
           height={48}
-          className="absolute left-1/2 h-12 w-12 -translate-x-1/2 drop-shadow"
-          style={{ bottom: `${i * 6}px` }}
+          className="absolute left-1/2 h-9 w-9 -translate-x-1/2 drop-shadow"
+          style={{ bottom: `${i * 5}px` }}
         />
       ))}
-      <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-xs font-bold text-neon-mint">{amount}</div>
+      <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 text-[10px] font-bold text-neon-mint">{amount}</div>
     </div>
   );
 }
