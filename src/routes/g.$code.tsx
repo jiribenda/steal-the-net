@@ -57,7 +57,6 @@ function GameRoom() {
   const [actions, setActions] = useState<ActionLite[]>([]);
   const [now, setNow] = useState(Date.now());
   const settlingRef = useRef(false);
-  const stateRefreshRef = useRef<(() => Promise<void>) | null>(null);
 
   const me = players.find((p) => (p as PlayerLite & { client_id: string }).hasOwnProperty);
   // We'll find me by client_id below using a query
@@ -91,7 +90,6 @@ function GameRoom() {
           setActions([]);
         }
       };
-      stateRefreshRef.current = loadState;
       await loadState();
 
       const channel = supabase
