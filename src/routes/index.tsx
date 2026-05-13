@@ -20,6 +20,12 @@ export const Route = createFileRoute("/")({
 function Home() {
   const navigate = useNavigate();
   const [name, setName] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hostname === "steal-the-net.lovable.app") {
+      window.location.replace("https://tipsport.lovable.app");
+    }
+  }, []);
   const [joinCode, setJoinCode] = useState("");
   const [startingChips, setStartingChips] = useState(50);
   const [roundSeconds, setRoundSeconds] = useState(60);
