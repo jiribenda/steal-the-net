@@ -23,7 +23,7 @@ function Home() {
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.location.hostname === "steal-the-net.lovable.app") {
-      window.location.replace("https://tipsport.lovable.app");
+      window.location.replace("https://zlodeji.lovable.app");
     }
   }, []);
   const [joinCode, setJoinCode] = useState("");
